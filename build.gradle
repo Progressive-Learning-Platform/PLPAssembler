@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
 group 'org.plp'
@@ -21,4 +21,8 @@ test {
             'junit.jupiter.extensions.autodetection.enabled': 'true',
             'junit.jupiter.testinstance.lifecycle.default': 'per_class'
     ]
+}
+
+java {
+    withJavadocJar()
 }
