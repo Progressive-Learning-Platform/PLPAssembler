@@ -29,6 +29,7 @@ test {
 
 java {
     withJavadocJar()
+    withSourcesJar()
 }
 
 jacocoTestReport {
