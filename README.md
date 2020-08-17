@@ -1,2 +1,2 @@
 # PLPAssembler
-An assembler that assembles programs written in PLP language
+An excellent assembler that assembles programs written in PLP language
