@@ -28,11 +28,11 @@ public interface AsmFile {
     void setFilePath(String filePath);
 
     /**
-     *  Given a list of instructions of the program, this will add it to its inmemory representation of that program
-     * @param instructions List of instructions to be added to its in-memory representation
+     *  Given an instructions of the program, this will add it to its inmemory representation of that program
+     * @param instruction Instructions to be added to its in-memory representation
      * @return true is successfully added the instructions else false
      */
-    boolean addInstructionsToFile(List<String> instructions);
+    boolean addInstructionToFile(String instruction);
 
     /**
      *  Given a lineNumber, obtain the instruction present at that line
@@ -43,7 +43,7 @@ public interface AsmFile {
 
     /**
      *  Get all the instructions stored in memory of this file.
-     *  Use this only after {@link #readFromFile()} or {@link #addInstructionsToFile(List)}
+     *  Use this only after {@link #readFromFile()} or {@link #addInstructionToFile(String)}
      * @return list of instructions present in the file.
      */
     List<String> getInstructions();
