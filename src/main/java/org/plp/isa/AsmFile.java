@@ -28,25 +28,24 @@ public interface AsmFile {
     void setFilePath(String filePath);
 
     /**
-     *  Given a list of instructions of the program, this is add it to its inmemory representation of that program
+     *  Given a list of instructions of the program, this will add it to its inmemory representation of that program
      * @param instructions List of instructions to be added to its in-memory representation
-     * @return list of {@link AsmInstruction} which is equivalent of the string representation
      */
-    List<AsmInstruction> addInstructionsToFile(List<String> instructions);
+    void addInstructionsToFile(List<String> instructions);
 
     /**
      *  Given a lineNumber, obtain the instruction present at that line
      * @param lineNumber line number in the file/program
-     * @return {@link AsmInstruction} present at that line
+     * @return Instruction present at that line
      */
-    AsmInstruction getInstructionAtLine(int lineNumber);
+    String getInstructionAtLine(int lineNumber);
 
     /**
      *  Get all the instructions stored in memory of this file.
      *  Use this only after {@link #readFromFile()} or {@link #addInstructionsToFile(List)}
-     * @return list of {@link AsmInstruction} of the file.
+     * @return list of instructions present in the file.
      */
-    List<AsmInstruction> getInstructions();
+    List<String> getInstructions();
 
     /**
      * This will read the content of the file present at {@link #getFilePath()} and store in memory all the

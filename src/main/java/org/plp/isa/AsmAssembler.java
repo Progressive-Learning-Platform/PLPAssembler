@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * A generic assembler which takes in a list of files which has assembly instructions and generates a disassembly
  */
-public interface Assembler {
+public interface AsmAssembler {
 
     /**
      * Assembles a list of assembly files and generates an {@link AsmImage}, which has disassembly of the instructions
