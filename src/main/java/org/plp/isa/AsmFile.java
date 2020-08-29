@@ -30,8 +30,9 @@ public interface AsmFile {
     /**
      *  Given a list of instructions of the program, this will add it to its inmemory representation of that program
      * @param instructions List of instructions to be added to its in-memory representation
+     * @return true is successfully added the instructions else false
      */
-    void addInstructionsToFile(List<String> instructions);
+    boolean addInstructionsToFile(List<String> instructions);
 
     /**
      *  Given a lineNumber, obtain the instruction present at that line
