@@ -28,7 +28,7 @@ public interface AsmFile {
     void setFilePath(String filePath);
 
     /**
-     *  Given an instructions of the program, this will add it to its inmemory representation of that program
+     * Given an instruction of the program, this will add it to its inmemory representation of that program
      * @param instruction Instructions to be added to its in-memory representation
      * @return true is successfully added the instructions else false
      */
