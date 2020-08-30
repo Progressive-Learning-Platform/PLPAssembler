@@ -32,4 +32,10 @@ public interface AsmImage {
      * @param asmInstructionDisassemblyList list of disassembly of instructions.
      */
     void addDisassemblyOfInstructions(List<AsmInstructionDisassembly> asmInstructionDisassemblyList);
+
+    /**
+     * This provides the {@link AsmProgram} whose asm image this is
+     * @return Assembly program whose disassembly this is.
+     */
+    AsmProgram getProgram();
 }
