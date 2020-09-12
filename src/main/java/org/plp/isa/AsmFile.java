@@ -54,4 +54,16 @@ public interface AsmFile {
      */
     void readFromFile();
 
+    /**
+     * {@link AsmProgram} to which this file belongs to.
+     * @return {@link AsmProgram} to which this file belongs
+     */
+    AsmProgram getProgramOfFile();
+
+    /**
+     * Name of the file in which this file will be stored within in the {@link AsmProgram}
+     * @return name of the file within the {@link AsmProgram}
+     */
+    String getFileName();
+
 }
