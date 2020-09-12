@@ -29,7 +29,14 @@ public class PlpFileTest {
 
     @Test
     void createPlpFileSuccessFulTest() {
-        Assertions.assertDoesNotThrow(() -> new PlpFile(Path.of("test.asm")));
+        Path testOSXFile = testOSXFileSystem.getPath("test.asm");
+        Assertions.assertDoesNotThrow(() -> new PlpFile(testOSXFile));
+
+        Path testUnixFile = testOSXFileSystem.getPath("test.asm");
+        Assertions.assertDoesNotThrow(() -> new PlpFile(testUnixFile));
+
+        Path testWinFile = testOSXFileSystem.getPath("test.asm");
+        Assertions.assertDoesNotThrow(() -> new PlpFile(testWinFile));
     }
 
     @Test
