@@ -13,6 +13,13 @@ public interface AsmProgram {
     List<AsmFile> getAsmFilesOfProgram();
 
     /**
+     * Given a file name return the corresponding {@link AsmFile} stored in the program
+     * @param fileName name of the {@link AsmFile} searching for
+     * @return null if there is no {@link AsmFile} with the corresponding name else {@link AsmFile} with the name
+     */
+    AsmFile getAsmFile(String fileName);
+
+    /**
      * Add the given {@link AsmFile} to this program
      * @param asmFile AsmFile to be added to the program
      * @return true if successfully able to add the file to program else false

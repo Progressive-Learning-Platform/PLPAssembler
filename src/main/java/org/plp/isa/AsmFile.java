@@ -21,13 +21,6 @@ public interface AsmFile {
     String getFilePath();
 
     /**
-     *  This will update the disk file path where the AsmFile will be written to or read from. This is the setter
-     *  part of {@link #getFilePath()}
-     * @param filePath absolute path of the file
-     */
-    void setFilePath(String filePath);
-
-    /**
      * Given an instruction of the program, this will add it to its inmemory representation of that program
      * @param instruction Instructions to be added to its in-memory representation
      * @return true is successfully added the instructions else false
@@ -53,5 +46,11 @@ public interface AsmFile {
      * instructions.
      */
     void readFromFile();
+
+    /**
+     * Name of the file in which this file will be stored within in the {@link AsmProgram}
+     * @return name of the file within the {@link AsmProgram}
+     */
+    String getFileName();
 
 }
