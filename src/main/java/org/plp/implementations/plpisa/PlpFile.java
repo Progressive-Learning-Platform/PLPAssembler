@@ -2,11 +2,13 @@ package org.plp.implementations.plpisa;
 
 import org.plp.isa.AsmFile;
 import org.plp.isa.AsmProgram;
+import org.plp.isa.exceptions.AsmAssemblerException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -51,7 +53,7 @@ public class PlpFile implements AsmFile {
      */
     @Override
     public String getFilePath() {
-        return null;
+        return filePath.toAbsolutePath().toString();
     }
 
     /**
@@ -72,8 +74,13 @@ public class PlpFile implements AsmFile {
      * @return Instruction present at that line
      */
     @Override
-    public String getInstructionAtLine(int lineNumber) {
-        return null;
+    public String getInstructionAtLine(int lineNumber) throws AsmAssemblerException {
+        if(lineNumber < 1 || lineNumber > fileContent.size()) {
+            throw new AsmAssemblerException(
+                    String.format("Invalid line number for the file. Line number should be between 1 and %d",
+                            fileContent.size()));
+        }
+        return fileContent.get(lineNumber - 1);
     }
 
     /**
@@ -84,7 +91,7 @@ public class PlpFile implements AsmFile {
      */
     @Override
     public List<String> getInstructions() {
-        return null;
+        return Collections.unmodifiableList(fileContent);
     }
 
     /**
@@ -92,8 +99,11 @@ public class PlpFile implements AsmFile {
      * instructions.
      */
     @Override
-    public void readFromFile() {
-
+    public void readFromFile() throws IOException {
+        if(Files.exists(filePath)) {
+            fileContent.clear();
+            fileContent.addAll(Files.readAllLines(filePath));
+        }
     }
 
     /**
@@ -103,6 +113,6 @@ public class PlpFile implements AsmFile {
      */
     @Override
     public String getFileName() {
-        return null;
+        return filePath.getFileName().toString();
     }
 }

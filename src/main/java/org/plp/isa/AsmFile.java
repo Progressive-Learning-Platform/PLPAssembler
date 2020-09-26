@@ -1,5 +1,6 @@
 package org.plp.isa;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public interface AsmFile {
      * This will read the content of the file present at {@link #getFilePath()} and store in memory all the
      * instructions.
      */
-    void readFromFile();
+    void readFromFile() throws IOException;
 
     /**
      * Name of the file in which this file will be stored within in the {@link AsmProgram}

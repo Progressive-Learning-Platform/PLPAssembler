@@ -7,11 +7,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.plp.isa.exceptions.AsmAssemblerException;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.hasItems;
 
 @ExtendWith(MockitoExtension.class)
 public class PlpFileTest {
@@ -32,11 +38,104 @@ public class PlpFileTest {
         Path testOSXFile = testOSXFileSystem.getPath("test.asm");
         Assertions.assertDoesNotThrow(() -> new PlpFile(testOSXFile));
 
-        Path testUnixFile = testOSXFileSystem.getPath("test.asm");
+        Path testUnixFile = testUnixFileSystem.getPath("test.asm");
         Assertions.assertDoesNotThrow(() -> new PlpFile(testUnixFile));
 
-        Path testWinFile = testOSXFileSystem.getPath("test.asm");
+        Path testWinFile = testWinFileSystem.getPath("test.asm");
         Assertions.assertDoesNotThrow(() -> new PlpFile(testWinFile));
+    }
+
+    @Test
+    void createPlpFileSuccessFulForExistingFileTest() throws IOException{
+        List<String> programLines = new ArrayList<>();
+        programLines.add(".org 0x100000");
+        programLines.add("");
+        programLines.add("add $r1,$r2  # this is a test");
+
+        Path testOSXFile = testOSXFileSystem.getPath("test.asm");
+        Files.createFile(testOSXFile);
+        Files.write(testOSXFile, programLines);
+        PlpFile plpOsxFile = new PlpFile(testOSXFile);
+        Assertions.assertEquals(plpOsxFile.getInstructions(), programLines);
+
+
+        Path testUnixFile = testUnixFileSystem.getPath("test.asm");
+        Files.createFile(testUnixFile);
+        Files.write(testUnixFile, programLines);
+        PlpFile plpUnixFile = new PlpFile(testUnixFile);
+        Assertions.assertEquals(plpUnixFile.getInstructions(), programLines);
+
+        Path testWinFile = testWinFileSystem.getPath("test.asm");
+        Files.createFile(testWinFile);
+        Files.write(testWinFile, programLines);
+        PlpFile plpWinFile = new PlpFile(testWinFile);
+        Assertions.assertEquals(plpWinFile.getInstructions(), programLines);
+    }
+
+    @Test
+    void getInstructionAtLineNumberFromPlpFileTest() throws IOException{
+        List<String> programLines = new ArrayList<>();
+        programLines.add(".org 0x100000");
+        programLines.add("");
+        programLines.add("add $r1,$r2  # this is a test");
+
+        Path testOSXFile = testOSXFileSystem.getPath("test.asm");
+        Files.createFile(testOSXFile);
+        Files.write(testOSXFile, programLines);
+        PlpFile plpOsxFile = new PlpFile(testOSXFile);
+        Assertions.assertEquals(".org 0x100000", plpOsxFile.getInstructionAtLine(1));
+        Assertions.assertEquals("", plpOsxFile.getInstructionAtLine(2));
+        Assertions.assertEquals("add $r1,$r2  # this is a test", plpOsxFile.getInstructionAtLine(3));
+
+
+        Path testUnixFile = testUnixFileSystem.getPath("test.asm");
+        Files.createFile(testUnixFile);
+        Files.write(testUnixFile, programLines);
+        PlpFile plpUnixFile = new PlpFile(testUnixFile);
+        Assertions.assertEquals(".org 0x100000", plpUnixFile.getInstructionAtLine(1));
+        Assertions.assertEquals("", plpUnixFile.getInstructionAtLine(2));
+        Assertions.assertEquals("add $r1,$r2  # this is a test", plpUnixFile.getInstructionAtLine(3));
+
+        Path testWinFile = testWinFileSystem.getPath("test.asm");
+        Files.createFile(testWinFile);
+        Files.write(testWinFile, programLines);
+        PlpFile plpWinFile = new PlpFile(testWinFile);
+        Assertions.assertEquals(".org 0x100000", plpWinFile.getInstructionAtLine(1));
+        Assertions.assertEquals("", plpWinFile.getInstructionAtLine(2));
+        Assertions.assertEquals("add $r1,$r2  # this is a test", plpWinFile.getInstructionAtLine(3));
+    }
+
+    @Test
+    void getInstructionAtLineNumberFromPlpFileFailureTest() throws IOException{
+        List<String> programLines = new ArrayList<>();
+        programLines.add(".org 0x100000");
+        programLines.add("");
+        programLines.add("add $r1,$r2  # this is a test");
+
+        Path testOSXFile = testOSXFileSystem.getPath("test.asm");
+        Files.createFile(testOSXFile);
+        Files.write(testOSXFile, programLines);
+        PlpFile plpOsxFile = new PlpFile(testOSXFile);
+        Assertions.assertThrows(AsmAssemblerException.class, () -> plpOsxFile.getInstructionAtLine(0));
+        Assertions.assertThrows(AsmAssemblerException.class, () -> plpOsxFile.getInstructionAtLine(4));
+        Assertions.assertDoesNotThrow(() -> plpOsxFile.getInstructionAtLine(1));
+
+
+        Path testUnixFile = testUnixFileSystem.getPath("test.asm");
+        Files.createFile(testUnixFile);
+        Files.write(testUnixFile, programLines);
+        PlpFile plpUnixFile = new PlpFile(testUnixFile);
+        Assertions.assertThrows(AsmAssemblerException.class, () -> plpUnixFile.getInstructionAtLine(0));
+        Assertions.assertThrows(AsmAssemblerException.class, () -> plpUnixFile.getInstructionAtLine(4));
+        Assertions.assertDoesNotThrow(() -> plpUnixFile.getInstructionAtLine(1));
+
+        Path testWinFile = testWinFileSystem.getPath("test.asm");
+        Files.createFile(testWinFile);
+        Files.write(testWinFile, programLines);
+        PlpFile plpWinFile = new PlpFile(testWinFile);
+        Assertions.assertThrows(AsmAssemblerException.class, () -> plpWinFile.getInstructionAtLine(0));
+        Assertions.assertThrows(AsmAssemblerException.class, () -> plpWinFile.getInstructionAtLine(4));
+        Assertions.assertDoesNotThrow(() -> plpWinFile.getInstructionAtLine(1));
     }
 
     @Test
@@ -52,5 +151,37 @@ public class PlpFileTest {
         Path programWinDirectory = testWinFileSystem.getPath("test.asm");
         Files.createDirectory(programWinDirectory);
         Assertions.assertThrows(IOException.class, () -> new PlpFile(programWinDirectory));
+    }
+
+    @Test
+    void getFilePathTest() throws IOException {
+        Path testOSXFile = testOSXFileSystem.getPath("test.asm");
+        PlpFile plpOSXFile = new PlpFile(testOSXFile);
+        Assertions.assertEquals(testOSXFile.toAbsolutePath().toString(), plpOSXFile.getFilePath());
+
+        Path testUnixFile = testOSXFileSystem.getPath("test.asm");
+        PlpFile plpUnixFile = new PlpFile(testOSXFile);
+        Assertions.assertEquals(testUnixFile.toAbsolutePath().toString(), plpUnixFile.getFilePath());
+
+        Path testWinFile = testOSXFileSystem.getPath("test.asm");
+        PlpFile plpWinFile = new PlpFile(testWinFile);
+        Assertions.assertEquals(testWinFile.toAbsolutePath().toString(), plpWinFile.getFilePath());
+
+    }
+
+    @Test
+    void getFileNameTest() throws IOException {
+        Path testOSXFile = testOSXFileSystem.getPath("test.asm");
+        PlpFile plpOSXFile = new PlpFile(testOSXFile);
+        Assertions.assertEquals(testOSXFile.getFileName().toString(), plpOSXFile.getFileName());
+
+        Path testUnixFile = testOSXFileSystem.getPath("test.asm");
+        PlpFile plpUnixFile = new PlpFile(testOSXFile);
+        Assertions.assertEquals(testUnixFile.getFileName().toString(), plpUnixFile.getFileName());
+
+        Path testWinFile = testOSXFileSystem.getPath("test.asm");
+        PlpFile plpWinFile = new PlpFile(testWinFile);
+        Assertions.assertEquals(testWinFile.getFileName().toString(), plpWinFile.getFileName());
+
     }
 }
