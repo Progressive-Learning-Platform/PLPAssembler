@@ -4,7 +4,9 @@ import org.plp.isa.AsmFile;
 import org.plp.isa.AsmProgram;
 import org.plp.isa.exceptions.AsmAssemblerException;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -41,8 +43,14 @@ public class PlpFile implements AsmFile {
      * @return true if it is successful to write to file, false if there is an error
      */
     @Override
-    public boolean writeToFile() {
-        return false;
+    public boolean writeToFile() throws IOException{
+        try(BufferedWriter writer = Files.newBufferedWriter(filePath, Charset.forName("utf-8"))) {
+            for(String line: fileContent) {
+                writer.write(line);
+                writer.newLine();
+            }
+        }
+        return true;
     }
 
     /**
@@ -64,7 +72,7 @@ public class PlpFile implements AsmFile {
      */
     @Override
     public boolean addInstructionToFile(String instruction) {
-        return false;
+        return fileContent.add(instruction);
     }
 
     /**

@@ -12,7 +12,7 @@ public interface AsmFile {
      * disk file whose path is given by {@link #getFilePath()}
      * @return true if it is successful to write to file, false if there is an error
      */
-    boolean writeToFile();
+    boolean writeToFile() throws IOException;
 
     /**
      * This will provide the disk file path where the AsmFile will be written to by {@link #writeToFile()} and
