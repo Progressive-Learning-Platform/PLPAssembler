@@ -10,8 +10,10 @@ public interface AsmInstructionAssembler {
 
     /**
      * Given a set of arguments, this instruction will give the encoded value of that instruction
+     *
      * @param arguments list of arguments of the instruction
      * @return encoded value of the instruction
+     * @throws AsmAssemblerException - thrown if arguments are invalid
      */
     long assemble(AsmArgument[] arguments) throws AsmAssemblerException;
 
@@ -22,7 +24,9 @@ public interface AsmInstructionAssembler {
     AsmArgumentType[] getArgumentTypesOfInstruction();
 
     /**
-     * This represents the size of the encoded value that will be taken up in disassembly representation
+     * This represents the size of the encoded value that will be taken up in
+     * disassembly representation
+     *
      * @return size of encoded value
      */
     int getMemoryAllocationSize();

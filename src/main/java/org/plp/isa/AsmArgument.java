@@ -2,7 +2,8 @@ package org.plp.isa;
 
 /**
  * This represent the individual arguments of an instruction
- * Example arguments of an instruction are register, memory location, numeric literal value, string literal, etc
+ * Example arguments of an instruction are register, memory location, numeric literal value,
+ * string literal, etc
  */
 public interface AsmArgument {
     /**

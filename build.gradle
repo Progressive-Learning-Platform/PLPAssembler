@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'jacoco'
+    id 'checkstyle'
 }
 
 group 'org.plp'
@@ -68,3 +69,13 @@ jacocoTestCoverageVerification {
     }
 }
 
+checkstyle {
+    toolVersion '8.36.2'
+    configFile file("${rootDir}/config/checkstyle/PLP_checkstyle.xml")
+}
+checkstyleMain {
+    source='src/main/java'
+}
+checkstyleTest {
+    source='src/test/java'
+}

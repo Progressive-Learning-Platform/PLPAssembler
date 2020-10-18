@@ -13,29 +13,34 @@ public interface AsmProgram {
     List<AsmFile> getAsmFilesOfProgram();
 
     /**
-     * Given a file name return the corresponding {@link AsmFile} stored in the program
-     * @param fileName name of the {@link AsmFile} searching for
-     * @return null if there is no {@link AsmFile} with the corresponding name else {@link AsmFile} with the name
+     * Given a file name, returns the corresponding {@link AsmFile} stored in the program
+     *
+     * @param fileName - name of the given {@link AsmFile}
+     * @return - null if there is no {@link AsmFile} with the corresponding name,
+     *           otherwise the {@link AsmFile} with the given name
      */
     AsmFile getAsmFile(String fileName);
 
     /**
-     * Add the given {@link AsmFile} to this program
-     * @param asmFile AsmFile to be added to the program
-     * @return true if successfully able to add the file to program else false
+     * Adds the given {@link AsmFile} to this program
+     *
+     * @param asmFile - AsmFile to be added to the program
+     * @return - true if successfully added the file to program, false otherwise
      */
     boolean addAsmFileToProgram(AsmFile asmFile);
 
     /**
      * Creates a new {@link AsmFile} within in this program
-     * @param fileName Name of the {@link AsmFile} to be created
-     * @return {@link AsmFile} created in the program else null in case of failures
+     *
+     * @param fileName - name of the {@link AsmFile} to be created
+     * @return - {@link AsmFile} successfully created in the program, otherwise false
      */
     AsmFile createAsmFileInProgram(String fileName);
 
     /**
-     * Provide the full path of the {@link AsmProgram} where it stores its files
-     * @return Absolute path of the program's direcotry.
+     * Provides the full path of the {@link AsmProgram} where the files are stored
+     *
+     * @return - absolute path of the program's directory.
      */
     String getProgramDirectory();
 }
