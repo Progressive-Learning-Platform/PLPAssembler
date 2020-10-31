@@ -1,6 +1,7 @@
 package org.plp.isa;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -17,9 +18,9 @@ public interface AsmFile {
     /**
      * This will provide the disk file path where the AsmFile will be written to by {@link #writeToFile()} and
      * similarly from where this will read the file in {@link #readFromFile()}
-     * @return absolute path of the file
+     * @return Path of the file
      */
-    String getFilePath();
+    Path getFilePath();
 
     /**
      * Given an instruction of the program, this will add it to its inmemory representation of that program

@@ -16,8 +16,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.hasItems;
 
 @ExtendWith(MockitoExtension.class)
 public class PlpFileTest {
@@ -157,15 +155,15 @@ public class PlpFileTest {
     void getFilePathTest() throws IOException {
         Path testOSXFile = testOSXFileSystem.getPath("test.asm");
         PlpFile plpOSXFile = new PlpFile(testOSXFile);
-        Assertions.assertEquals(testOSXFile.toAbsolutePath().toString(), plpOSXFile.getFilePath());
+        Assertions.assertEquals(testOSXFile, plpOSXFile.getFilePath());
 
         Path testUnixFile = testOSXFileSystem.getPath("test.asm");
         PlpFile plpUnixFile = new PlpFile(testOSXFile);
-        Assertions.assertEquals(testUnixFile.toAbsolutePath().toString(), plpUnixFile.getFilePath());
+        Assertions.assertEquals(testUnixFile, plpUnixFile.getFilePath());
 
         Path testWinFile = testOSXFileSystem.getPath("test.asm");
         PlpFile plpWinFile = new PlpFile(testWinFile);
-        Assertions.assertEquals(testWinFile.toAbsolutePath().toString(), plpWinFile.getFilePath());
+        Assertions.assertEquals(testWinFile, plpWinFile.getFilePath());
 
     }
 

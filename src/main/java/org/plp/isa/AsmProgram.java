@@ -1,5 +1,6 @@
 package org.plp.isa;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -20,18 +21,19 @@ public interface AsmProgram {
     AsmFile getAsmFile(String fileName);
 
     /**
-     * Add the given {@link AsmFile} to this program
+     * Copy the given {@link AsmFile} to this program. It is going to copy the content to the passed
+     * {@link AsmFile} as {@link AsmFile} path is immutable.
      * @param asmFile AsmFile to be added to the program
-     * @return true if successfully able to add the file to program else false
+     * @return returns the new {@link AsmFile} created from the content of passed {@link AsmFile}
      */
-    boolean addAsmFileToProgram(AsmFile asmFile);
+    AsmFile copyAsmFileToProgram(AsmFile asmFile) throws IOException;
 
     /**
      * Creates a new {@link AsmFile} within in this program
      * @param fileName Name of the {@link AsmFile} to be created
      * @return {@link AsmFile} created in the program else null in case of failures
      */
-    AsmFile createAsmFileInProgram(String fileName);
+    AsmFile createAsmFileInProgram(String fileName) throws IOException;
 
     /**
      * Provide the full path of the {@link AsmProgram} where it stores its files

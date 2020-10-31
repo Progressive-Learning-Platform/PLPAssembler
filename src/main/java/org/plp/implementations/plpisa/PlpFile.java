@@ -1,5 +1,6 @@
 package org.plp.implementations.plpisa;
 
+import lombok.NonNull;
 import org.plp.isa.AsmFile;
 import org.plp.isa.AsmProgram;
 import org.plp.isa.exceptions.AsmAssemblerException;
@@ -7,6 +8,7 @@ import org.plp.isa.exceptions.AsmAssemblerException;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public class PlpFile implements AsmFile {
      */
     @Override
     public boolean writeToFile() throws IOException{
-        try(BufferedWriter writer = Files.newBufferedWriter(filePath, Charset.forName("utf-8"))) {
+        try(BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8)) {
             for(String line: fileContent) {
                 writer.write(line);
                 writer.newLine();
@@ -60,8 +62,8 @@ public class PlpFile implements AsmFile {
      * @return absolute path of the file
      */
     @Override
-    public String getFilePath() {
-        return filePath.toAbsolutePath().toString();
+    public Path getFilePath() {
+        return filePath;
     }
 
     /**
@@ -71,7 +73,7 @@ public class PlpFile implements AsmFile {
      * @return true is successfully added the instructions else false
      */
     @Override
-    public boolean addInstructionToFile(String instruction) {
+    public boolean addInstructionToFile(@NonNull String instruction) {
         return fileContent.add(instruction);
     }
 
