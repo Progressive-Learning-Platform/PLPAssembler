@@ -202,7 +202,7 @@ public class PlpProgramTest {
 
     @Test
     void addFilesToProgramFailureTest(@TempDir Path rootDirectory) throws Exception {
-        Path programDirectory = Path.of(rootDirectory.toString(), "testProgram");
+        Path programDirectory = rootDirectory.resolve("testProgram");
         Files.createDirectory(programDirectory);
         Path asmFile1 = programDirectory.resolve("test1.asm");
         Files.write(asmFile1, Arrays.asList("# This is program 1"));
@@ -225,7 +225,7 @@ public class PlpProgramTest {
 
     @Test
     void addFilesToProgramSuccessTest(@TempDir Path rootDirectory) throws Exception {
-        Path programDirectory = Path.of(rootDirectory.toString(), "testProgram");
+        Path programDirectory = rootDirectory.resolve("testProgram");
         Files.createDirectory(programDirectory);
         Path asmFile1 = programDirectory.resolve("test1.asm");
         Files.write(asmFile1, Arrays.asList("# This is program 1"));
