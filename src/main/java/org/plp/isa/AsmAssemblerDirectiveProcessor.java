@@ -13,14 +13,17 @@ import org.plp.isa.exceptions.AsmAssemblerException;
  * PlpEquAssemblerDirectiveProcessor needs to handle 2 arguments mylocation and 0x200000.
  *
  * So interface is saying an assembler directive can have multiple arguments
- * but individual implementation will decide the actual number of arguments needed for their directive.
+ * but individual implementation will decide the actual number of arguments
+ * needed for their directive.
  */
 public interface AsmAssemblerDirectiveProcessor {
     /**
      * This processes the assembler directive based on the arguments passed and returns the
      * replacement placeholder for further assembling of the assembly program
+     *
      * @param asmArguments list of arguments in the order needed for processing directive
      * @return replacement placeholder instruction to be used during assembly
+     * @throws AsmAssemblerException - thrown if the directive cannot be processed
      */
     String perform(AsmArgument[] asmArguments) throws AsmAssemblerException;
 

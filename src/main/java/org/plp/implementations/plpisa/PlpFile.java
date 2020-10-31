@@ -7,7 +7,6 @@ import org.plp.isa.exceptions.AsmAssemblerException;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,8 +20,14 @@ import java.util.List;
  */
 public class PlpFile implements AsmFile {
     private final Path filePath;
-    private List<String> fileContent;
+    private final List<String> fileContent;
 
+    /**
+     * Constructor for a PlpFile
+     *
+     * @param filePath - path to the physical file containing assembly commands
+     * @throws IOException - thrown if file cannot be read
+     */
     public PlpFile(Path filePath) throws IOException{
         validateFilePath(filePath);
         this.filePath = filePath;
@@ -33,16 +38,17 @@ public class PlpFile implements AsmFile {
     private void validateFilePath(Path filePath) throws IOException {
         if(Files.exists(filePath) && Files.isDirectory(filePath)) {
             throw new IOException(
-                    String.format("Given path - %s is a directory, will not be able to create the PlpFile",
-                            filePath.toString()));
+                    String.format("Given path - %s is a directory, will not be able " +
+                                    "to create the PlpFile", filePath.toString()));
         }
     }
 
     /**
-     * This will write the inmemory instructions of the program represented as {@link #getInstructions()} to the
-     * disk file whose path is given by {@link #getFilePath()}
+     * This will write the in-memory instructions of the program represented as
+     * {@link #getInstructions()} to disk at the path given by {@link #getFilePath()}
      *
-     * @return true if it is successful to write to file, false if there is an error
+     * @return - true if writing to the file was successful, false otherwise
+     * @throws IOException any file write related IO errors
      */
     @Override
     public boolean writeToFile() throws IOException{
@@ -56,10 +62,11 @@ public class PlpFile implements AsmFile {
     }
 
     /**
-     * This will provide the disk file path where the AsmFile will be written to by {@link #writeToFile()} and
-     * similarly from where this will read the file in {@link #readFromFile()}
+     * This will provide the disk file path where the AsmFile will be written to by
+     * {@link #writeToFile()} and similarly from where this will read the file in
+     * {@link #readFromFile()}
      *
-     * @return absolute path of the file
+     * @return - absolute path of the file
      */
     @Override
     public Path getFilePath() {
@@ -67,10 +74,11 @@ public class PlpFile implements AsmFile {
     }
 
     /**
-     * Given an instruction of the program, this will add it to its inmemory representation of that program
+     * Given an instruction of the program, this will add it to its in-memory representation
+     * of that program
      *
-     * @param instruction Instructions to be added to its in-memory representation
-     * @return true is successfully added the instructions else false
+     * @param instruction - Instruction to be added to its in-memory representation
+     * @return - true if instruction is successfully added, false otherwise
      */
     @Override
     public boolean addInstructionToFile(@NonNull String instruction) {
@@ -80,24 +88,26 @@ public class PlpFile implements AsmFile {
     /**
      * Given a lineNumber, obtain the instruction present at that line
      *
-     * @param lineNumber line number in the file/program
-     * @return Instruction present at that line
+     * @param lineNumber - line number in the file/program
+     * @return - instruction present at that line
+     * @throws AsmAssemblerException - thrown if encounters an invalid line number
      */
     @Override
     public String getInstructionAtLine(int lineNumber) throws AsmAssemblerException {
         if(lineNumber < 1 || lineNumber > fileContent.size()) {
             throw new AsmAssemblerException(
-                    String.format("Invalid line number for the file. Line number should be between 1 and %d",
-                            fileContent.size()));
+                    String.format("Invalid line number for the file. Line number should be " +
+                                    "between 1 and %d", fileContent.size()));
         }
         return fileContent.get(lineNumber - 1);
     }
 
     /**
      * Get all the instructions stored in memory of this file.
+     *
      * Use this only after {@link #readFromFile()} or {@link #addInstructionToFile(String)}
      *
-     * @return list of instructions present in the file.
+     * @return - list of instructions present in the file.
      */
     @Override
     public List<String> getInstructions() {
@@ -105,8 +115,10 @@ public class PlpFile implements AsmFile {
     }
 
     /**
-     * This will read the content of the file present at {@link #getFilePath()} and store in memory all the
-     * instructions.
+     * This will read the contents of the file present at {@link #getFilePath()} and store
+     * all the instructions contained in the file in memory.
+     *
+     * @throws IOException - thrown if file cannot be read
      */
     @Override
     public void readFromFile() throws IOException {
@@ -119,7 +131,7 @@ public class PlpFile implements AsmFile {
     /**
      * Name of the file in which this file will be stored within in the {@link AsmProgram}
      *
-     * @return name of the file within the {@link AsmProgram}
+     * @return - name of the file within the {@link AsmProgram}
      */
     @Override
     public String getFileName() {

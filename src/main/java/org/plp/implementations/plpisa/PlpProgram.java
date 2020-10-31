@@ -16,14 +16,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * This is the Plp representation of {@link AsmProgram}. This holds all the asm files a plp program will hold
- * and also maps to a directory where it will store these files.
+ * This is a PLP representation of {@link AsmProgram}. This holds all the asm files a PLP
+ * program will hold and also maps to a directory where it will store these files.
  */
 public class PlpProgram implements AsmProgram {
 
     private final Map<String, AsmFile> filesInProgram;
     private final Path programDirectory;
 
+    /**
+     * Constructor for a PlpProgram object
+     *
+     * @param programDirectory - the directory where the asm file(s) are stored
+     * @throws IOException - thrown if the directory or files cannot be read
+     */
     public PlpProgram(Path programDirectory) throws IOException{
         validatePath(programDirectory);
         filesInProgram = new HashMap<>();
@@ -33,26 +39,30 @@ public class PlpProgram implements AsmProgram {
 
     /**
      * This verifies if given directory exists. If it does not, it will create one.
-     * @param programDirectory Directory Path which needs to be verified
-     * @throws IOException if program's path is invalid that is path is a file instead of directory
+     *
+     * @param programDirectory - directory path to be verified
+     * @throws IOException if the program path is invalid (i.e. it is a directory)
      */
     private void validatePath(Path programDirectory) throws IOException {
         if(!Files.exists(programDirectory)) {
             Files.createDirectories(programDirectory);
         } else if(!Files.isDirectory(programDirectory)) {
-            throw new IOException("Path provided has a file instead of directory - " + programDirectory.toString());
+            throw new IOException("Path provided has a file instead of directory - "
+                    + programDirectory.toString());
         }
     }
 
     /**
-     * This is read the content of the {@link #programDirectory} and if it has any {@link AsmFile}
-     * it will read it into memory.
+     * Reads the content of the {@link #programDirectory} and if it has any {@link AsmFile}s
+     * it will read them into memory.
      * @throws IOException if it fails to read the {@link AsmFile}s
+     * @throws UnsupportedOperationException - thrown until implemented
      */
     private void loadFilesToMemory() throws IOException {
         if(Files.exists(programDirectory)) {
             try (Stream<Path> paths = Files.walk(programDirectory)) {
-                List<Path> programFiles = paths.filter(Files::isRegularFile).collect(Collectors.toList());
+                List<Path> programFiles = paths.filter(Files::isRegularFile)
+                        .collect(Collectors.toList());
                 for(Path path: programFiles) {
                     AsmFile asmFile = new PlpFile(path);
                     filesInProgram.put(asmFile.getFileName(), asmFile);
@@ -63,9 +73,9 @@ public class PlpProgram implements AsmProgram {
     }
 
     /**
-     * Provide the list of {@link AsmFile} which constitute this program
+     * Returns a list of {@link AsmFile}s which constitute this program
      *
-     * @return list of {@link AsmFile}
+     * @return - list of {@link AsmFile}
      */
     @Override
     public List<AsmFile> getAsmFilesOfProgram() {
@@ -73,10 +83,11 @@ public class PlpProgram implements AsmProgram {
     }
 
     /**
-     * Given a file name return the corresponding {@link AsmFile} stored in the program
+     * Given a file name, returns the corresponding {@link AsmFile} stored in the program
      *
-     * @param fileName name of the {@link AsmFile} searching for
-     * @return null if there is no {@link AsmFile} with the corresponding name else {@link AsmFile} with the name
+     * @param fileName - name of the given {@link AsmFile}
+     * @return - null if there is no {@link AsmFile} with the corresponding name,
+     *           otherwise the {@link AsmFile} with the given name
      */
     @Override
     public AsmFile getAsmFile(String fileName) {
@@ -88,6 +99,7 @@ public class PlpProgram implements AsmProgram {
      * {@link AsmFile} as {@link AsmFile} path is immutable.
      * @param asmFile AsmFile to be added to the program
      * @return returns the new {@link AsmFile} created from the content of passed {@link AsmFile}
+     * @throws IOException if already a {@link AsmFile} with same name exists in program
      */
     @Override
     public AsmFile copyAsmFileToProgram(AsmFile asmFile) throws IOException{
@@ -112,8 +124,9 @@ public class PlpProgram implements AsmProgram {
     /**
      * Creates a new {@link AsmFile} within in this program
      *
-     * @param fileName Name of the {@link AsmFile} to be created
-     * @return {@link AsmFile} created in the program else null in case of failures
+     * @param fileName - name of the {@link AsmFile} to be created
+     * @return - {@link AsmFile} successfully created in the program, otherwise false
+     * @throws IOException {@link AsmFile} file with same name already exists
      */
     @Override
     public AsmFile createAsmFileInProgram(String fileName) throws IOException{
@@ -130,9 +143,9 @@ public class PlpProgram implements AsmProgram {
     }
 
     /**
-     * Provide the full path of the {@link AsmProgram} where it stores its files
+     * Provides the full path of the {@link AsmProgram} where the files are stored
      *
-     * @return Absolute path of the program's direcotry.
+     * @return - absolute path of the program's directory.
      */
     @Override
     public String getProgramDirectory() {

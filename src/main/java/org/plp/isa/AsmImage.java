@@ -3,8 +3,8 @@ package org.plp.isa;
 import java.util.List;
 
 /**
- * This is the product of assembling list of {@link AsmFile}. It has map for instruction to disassembly of that
- * instruction.
+ * This is the product of assembling list of {@link AsmFile}.
+ * It has map for instruction to disassembly of that instruction.
  */
 public interface AsmImage {
     /**
@@ -28,10 +28,13 @@ public interface AsmImage {
     AsmInstruction getInstructionOfDisassembly(AsmInstructionDisassembly asmInstructionDisassembly);
 
     /**
-     * This will store the list of disassembly to in-memory store which are generated from the instructions.
+     * This will store the list of disassembly to in-memory store which are generated
+     * from the instructions.
+     *
      * @param asmInstructionDisassemblyList list of disassembly of instructions.
      */
-    void addDisassemblyOfInstructions(List<AsmInstructionDisassembly> asmInstructionDisassemblyList);
+    void addDisassemblyOfInstructions(
+            List<AsmInstructionDisassembly> asmInstructionDisassemblyList);
 
     /**
      * This provides the {@link AsmProgram} whose asm image this is

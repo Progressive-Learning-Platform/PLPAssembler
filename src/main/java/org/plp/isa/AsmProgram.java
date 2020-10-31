@@ -14,9 +14,11 @@ public interface AsmProgram {
     List<AsmFile> getAsmFilesOfProgram();
 
     /**
-     * Given a file name return the corresponding {@link AsmFile} stored in the program
-     * @param fileName name of the {@link AsmFile} searching for
-     * @return null if there is no {@link AsmFile} with the corresponding name else {@link AsmFile} with the name
+     * Given a file name, returns the corresponding {@link AsmFile} stored in the program
+     *
+     * @param fileName - name of the given {@link AsmFile}
+     * @return - null if there is no {@link AsmFile} with the corresponding name,
+     *           otherwise the {@link AsmFile} with the given name
      */
     AsmFile getAsmFile(String fileName);
 
@@ -25,19 +27,23 @@ public interface AsmProgram {
      * {@link AsmFile} as {@link AsmFile} path is immutable.
      * @param asmFile AsmFile to be added to the program
      * @return returns the new {@link AsmFile} created from the content of passed {@link AsmFile}
+     * @throws IOException if already a {@link AsmFile} with same name exists in program
      */
     AsmFile copyAsmFileToProgram(AsmFile asmFile) throws IOException;
 
     /**
      * Creates a new {@link AsmFile} within in this program
-     * @param fileName Name of the {@link AsmFile} to be created
-     * @return {@link AsmFile} created in the program else null in case of failures
+     *
+     * @param fileName - name of the {@link AsmFile} to be created
+     * @return - {@link AsmFile} successfully created in the program, otherwise false
+     * @throws IOException {@link AsmFile} file with same name already exists
      */
     AsmFile createAsmFileInProgram(String fileName) throws IOException;
 
     /**
-     * Provide the full path of the {@link AsmProgram} where it stores its files
-     * @return Absolute path of the program's direcotry.
+     * Provides the full path of the {@link AsmProgram} where the files are stored
+     *
+     * @return - absolute path of the program's directory.
      */
     String getProgramDirectory();
 }
