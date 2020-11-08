@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class PlpProgramTest {
 
@@ -239,6 +240,25 @@ public class PlpProgramTest {
 
         Assertions.assertNotNull(plpProgram.getAsmFile("test2.asm"));
 
+    }
+
+    @Test
+    void getAsmFilesInProgramTest(@TempDir Path rootDirectory) throws Exception {
+        Path programDirectory = rootDirectory.resolve("testProgram");
+        Files.createDirectory(programDirectory);
+        Path asmFile1 = programDirectory.resolve("test1.asm");
+        Files.write(asmFile1, Arrays.asList("# This is program 1"));
+        Path asmFile2 = programDirectory.resolve("test2.asm");
+        Files.write(asmFile2, Arrays.asList("# This is program 2"));
+
+        PlpProgram plpProgram = new PlpProgram(programDirectory);
+        List<AsmFile> asmFiles = plpProgram.getAsmFilesOfProgram();
+
+        Assertions.assertEquals(2, asmFiles.size());
+        Assertions.assertTrue(asmFiles.stream().anyMatch(x -> x.getFileName().equals("test1.asm")));
+        Assertions.assertTrue(asmFiles.stream().anyMatch(x -> x.getFileName().equals("test2.asm")));
+        Assertions.assertTrue(asmFiles.stream().anyMatch(x -> x.getInstructionAtLine(1).equals("# This is program 1")));
+        Assertions.assertTrue(asmFiles.stream().anyMatch(x -> x.getInstructionAtLine(1).equals("# This is program 2")));
     }
 
 }

@@ -59,22 +59,19 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.9
+                minimum = 0.90
             }
         }
-
         rule {
-            enabled = false
-            element = 'CLASS'
-
             limit {
-                counter = 'LINE'
-                value = 'TOTALCOUNT'
-                maximum = 0.9
+                counter = 'BRANCH'
+                minimum = 0.90
             }
         }
     }
 }
+
+check.dependsOn jacocoTestCoverageVerification
 
 checkstyle {
     toolVersion '8.36.2'
