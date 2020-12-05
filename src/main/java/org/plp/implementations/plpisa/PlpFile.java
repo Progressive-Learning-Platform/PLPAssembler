@@ -1,10 +1,13 @@
 package org.plp.implementations.plpisa;
 
+import lombok.NonNull;
 import org.plp.isa.AsmFile;
 import org.plp.isa.AsmProgram;
 import org.plp.isa.exceptions.AsmAssemblerException;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -45,10 +48,17 @@ public class PlpFile implements AsmFile {
      * {@link #getInstructions()} to disk at the path given by {@link #getFilePath()}
      *
      * @return - true if writing to the file was successful, false otherwise
+     * @throws IOException any file write related IO errors
      */
     @Override
-    public boolean writeToFile() {
-        return false;
+    public boolean writeToFile() throws IOException{
+        try(BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8)) {
+            for(String line: fileContent) {
+                writer.write(line);
+                writer.newLine();
+            }
+        }
+        return true;
     }
 
     /**
@@ -59,8 +69,8 @@ public class PlpFile implements AsmFile {
      * @return - absolute path of the file
      */
     @Override
-    public String getFilePath() {
-        return filePath.toAbsolutePath().toString();
+    public Path getFilePath() {
+        return filePath;
     }
 
     /**
@@ -71,8 +81,8 @@ public class PlpFile implements AsmFile {
      * @return - true if instruction is successfully added, false otherwise
      */
     @Override
-    public boolean addInstructionToFile(String instruction) {
-        return false;
+    public boolean addInstructionToFile(@NonNull String instruction) {
+        return fileContent.add(instruction);
     }
 
     /**

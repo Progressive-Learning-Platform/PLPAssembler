@@ -5,11 +5,14 @@ import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.plp.isa.AsmFile;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class PlpProgramTest {
 
@@ -91,6 +94,171 @@ public class PlpProgramTest {
 
     }
 
+    @Test
+    void loadExistingPlpFilesInDirectoryTest() throws Exception {
+        Path programOSXDirectory = testOSXFileSystem.getPath("rootFolder");
+        Files.createDirectory(programOSXDirectory);
+        Path testOSXFile1 = testOSXFileSystem.getPath(Paths.get(programOSXDirectory.toString(),"test1.asm").toString());
+        Files.createFile(testOSXFile1);
+        Files.write(testOSXFile1, Collections.singletonList("#This is Program 1"));
+        Path testOSXFile2 = testOSXFileSystem.getPath(Paths.get(programOSXDirectory.toString(),"test2.asm").toString());
+        Files.createFile(testOSXFile2);
+        Files.write(testOSXFile2, Collections.singletonList("#This is Program 2"));
+        Path testOSXFile3 = testOSXFileSystem.getPath(Paths.get(programOSXDirectory.toString(),"test3.asm").toString());
+        Files.createFile(testOSXFile3);
+        Files.write(testOSXFile1, Collections.singletonList("#This is Program 3"));
 
+        PlpProgram plpOsXProgram = new PlpProgram(programOSXDirectory);
+        Assertions.assertNotNull(plpOsXProgram.getAsmFile("test1.asm"));
+        Assertions.assertNotNull(plpOsXProgram.getAsmFile("test2.asm"));
+        Assertions.assertNotNull(plpOsXProgram.getAsmFile("test3.asm"));
+
+        Path programUnixDirectory = testUnixFileSystem.getPath("rootFolder");
+        Files.createDirectory(programUnixDirectory);
+        Path testUnixFile1 = testUnixFileSystem.getPath(Paths.get(programUnixDirectory.toString(),"test1.asm").toString());
+        Files.createFile(testUnixFile1);
+        Files.write(testOSXFile1, Collections.singletonList("#This is Program 1"));
+        Path testUnixFile2 = testUnixFileSystem.getPath(Paths.get(programUnixDirectory.toString(),"test2.asm").toString());
+        Files.createFile(testUnixFile2);
+        Files.write(testOSXFile2, Collections.singletonList("#This is Program 2"));
+        Path testUnixFile3 = testUnixFileSystem.getPath(Paths.get(programUnixDirectory.toString(),"test3.asm").toString());
+        Files.createFile(testUnixFile3);
+        Files.write(testOSXFile1, Collections.singletonList("#This is Program 3"));
+
+        PlpProgram plpUnixProgram = new PlpProgram(programUnixDirectory);
+        Assertions.assertNotNull(plpUnixProgram.getAsmFile("test1.asm"));
+        Assertions.assertNotNull(plpUnixProgram.getAsmFile("test2.asm"));
+        Assertions.assertNotNull(plpUnixProgram.getAsmFile("test3.asm"));
+
+        Path programWinDirectory = testWinFileSystem.getPath("rootFolder");
+        Files.createDirectory(programWinDirectory);
+        Path testWinFile1 = testWinFileSystem.getPath(Paths.get(programWinDirectory.toString(),"test1.asm").toString());
+        Files.createFile(testWinFile1);
+        Files.write(testOSXFile1, Collections.singletonList("#This is Program 1"));
+        Path testWinFile2 = testWinFileSystem.getPath(Paths.get(programWinDirectory.toString(),"test2.asm").toString());
+        Files.createFile(testWinFile2);
+        Files.write(testOSXFile2, Collections.singletonList("#This is Program 2"));
+        Path testWinFile3 = testWinFileSystem.getPath(Paths.get(programWinDirectory.toString(),"test3.asm").toString());
+        Files.createFile(testWinFile3);
+        Files.write(testOSXFile1, Collections.singletonList("#This is Program 3"));
+
+        PlpProgram plpWinProgram = new PlpProgram(programWinDirectory);
+        Assertions.assertNotNull(plpWinProgram.getAsmFile("test1.asm"));
+        Assertions.assertNotNull(plpWinProgram.getAsmFile("test2.asm"));
+        Assertions.assertNotNull(plpWinProgram.getAsmFile("test3.asm"));
+    }
+
+    @Test
+    void createNewAsmFileTest() throws Exception {
+        Path programOSXDirectory = testOSXFileSystem.getPath("rootFolder");
+        PlpProgram plpOsXProgram = new PlpProgram(programOSXDirectory);
+        AsmFile plpOsXFile = plpOsXProgram.createAsmFileInProgram("test1.asm");
+        Assertions.assertNotNull(plpOsXFile);
+        Assertions.assertEquals("test1.asm", plpOsXFile.getFileName());
+        Assertions.assertEquals(plpOsXFile, plpOsXProgram.getAsmFile("test1.asm"));
+
+        Path programUnixDirectory = testUnixFileSystem.getPath("rootFolder");
+        PlpProgram plpUnixProgram = new PlpProgram(programUnixDirectory);
+        AsmFile plpUnixFile = plpUnixProgram.createAsmFileInProgram("test1.asm");
+        Assertions.assertNotNull(plpUnixFile);
+        Assertions.assertEquals("test1.asm", plpUnixFile.getFileName());
+        Assertions.assertEquals(plpUnixFile, plpUnixProgram.getAsmFile("test1.asm"));
+
+        Path programWinDirectory = testWinFileSystem.getPath("rootFolder");
+        PlpProgram plpWinProgram = new PlpProgram(programWinDirectory);
+        AsmFile plpWinFile = plpWinProgram.createAsmFileInProgram("test1.asm");
+        Assertions.assertNotNull(plpWinFile);
+        Assertions.assertEquals("test1.asm", plpWinFile.getFileName());
+        Assertions.assertEquals(plpWinFile, plpWinProgram.getAsmFile("test1.asm"));
+
+    }
+
+    @Test
+    void createNewAsmFileFailureTest() throws Exception {
+        Path programOSXDirectory = testOSXFileSystem.getPath("rootFolder");
+        Files.createDirectory(programOSXDirectory);
+        Path testOSXFile1 = testOSXFileSystem.getPath(Paths.get(programOSXDirectory.toString(),"test1.asm").toString());
+        Files.createFile(testOSXFile1);
+        Files.write(testOSXFile1, Collections.singletonList("#This is Program 1"));
+        PlpProgram plpOsXProgram = new PlpProgram(programOSXDirectory);
+        Assertions.assertThrows(IOException.class, () -> plpOsXProgram.createAsmFileInProgram("test1.asm"));
+
+        Path programUnixDirectory = testUnixFileSystem.getPath("rootFolder");
+        Files.createDirectory(programUnixDirectory);
+        Path testUnixFile1 = testUnixFileSystem.getPath(Paths.get(programUnixDirectory.toString(),"test1.asm").toString());
+        Files.createFile(testUnixFile1);
+        Files.write(testOSXFile1, Collections.singletonList("#This is Program 1"));
+        PlpProgram plpUnixProgram = new PlpProgram(programUnixDirectory);
+        Assertions.assertThrows(IOException.class, () -> plpUnixProgram.createAsmFileInProgram("test1.asm"));
+
+        Path programWinDirectory = testWinFileSystem.getPath("rootFolder");
+        Files.createDirectory(programWinDirectory);
+        Path testWinFile1 = testWinFileSystem.getPath(Paths.get(programWinDirectory.toString(),"test1.asm").toString());
+        Files.createFile(testWinFile1);
+        Files.write(testOSXFile1, Collections.singletonList("#This is Program 1"));
+        PlpProgram plpWinProgram = new PlpProgram(programWinDirectory);
+        Assertions.assertThrows(IOException.class, () -> plpWinProgram.createAsmFileInProgram("test1.asm"));
+
+    }
+
+    @Test
+    void addFilesToProgramFailureTest(@TempDir Path rootDirectory) throws Exception {
+        Path programDirectory = rootDirectory.resolve("testProgram");
+        Files.createDirectory(programDirectory);
+        Path asmFile1 = programDirectory.resolve("test1.asm");
+        Files.write(asmFile1, Arrays.asList("# This is program 1"));
+        Path asmFile2 = programDirectory.resolve("test2.asm");
+        Files.write(asmFile2, Arrays.asList("# This is program 2"));
+
+        Path asmFile3 = rootDirectory.resolve("test2.asm");
+        Files.write(asmFile3, Arrays.asList("# This is another program"));
+        PlpFile plpFile = new PlpFile(asmFile3);
+
+        PlpProgram plpProgram = new PlpProgram(programDirectory);
+        Assertions.assertThrows(IOException.class,
+                () -> plpProgram.copyAsmFileToProgram(plpFile),
+                "File with same name test2.asm exists in the program testProgram");
+
+        AsmFile existingFile = plpProgram.getAsmFile("test2.asm");
+        Assertions.assertNotNull(existingFile);
+        Assertions.assertEquals(existingFile.getInstructionAtLine(1), "# This is program 2");
+    }
+
+    @Test
+    void addFilesToProgramSuccessTest(@TempDir Path rootDirectory) throws Exception {
+        Path programDirectory = rootDirectory.resolve("testProgram");
+        Files.createDirectory(programDirectory);
+        Path asmFile1 = programDirectory.resolve("test1.asm");
+        Files.write(asmFile1, Arrays.asList("# This is program 1"));
+
+        Path asmFile2 = rootDirectory.resolve("test2.asm");
+        Files.write(asmFile2, Arrays.asList("# This is program 2"));
+        PlpFile plpFile = new PlpFile(asmFile2);
+
+        PlpProgram plpProgram = new PlpProgram(programDirectory);
+        Assertions.assertDoesNotThrow(() -> plpProgram.copyAsmFileToProgram(plpFile));
+
+        Assertions.assertNotNull(plpProgram.getAsmFile("test2.asm"));
+
+    }
+
+    @Test
+    void getAsmFilesInProgramTest(@TempDir Path rootDirectory) throws Exception {
+        Path programDirectory = rootDirectory.resolve("testProgram");
+        Files.createDirectory(programDirectory);
+        Path asmFile1 = programDirectory.resolve("test1.asm");
+        Files.write(asmFile1, Arrays.asList("# This is program 1"));
+        Path asmFile2 = programDirectory.resolve("test2.asm");
+        Files.write(asmFile2, Arrays.asList("# This is program 2"));
+
+        PlpProgram plpProgram = new PlpProgram(programDirectory);
+        List<AsmFile> asmFiles = plpProgram.getAsmFilesOfProgram();
+
+        Assertions.assertEquals(2, asmFiles.size());
+        Assertions.assertTrue(asmFiles.stream().anyMatch(x -> x.getFileName().equals("test1.asm")));
+        Assertions.assertTrue(asmFiles.stream().anyMatch(x -> x.getFileName().equals("test2.asm")));
+        Assertions.assertTrue(asmFiles.stream().anyMatch(x -> x.getInstructionAtLine(1).equals("# This is program 1")));
+        Assertions.assertTrue(asmFiles.stream().anyMatch(x -> x.getInstructionAtLine(1).equals("# This is program 2")));
+    }
 
 }

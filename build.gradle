@@ -13,11 +13,18 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+
     testImplementation("com.google.jimfs:jimfs:1.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
     testImplementation("org.mockito:mockito-junit-jupiter:3.5.10")
-    testImplementation('org.hamcrest:hamcrest:2.2')
+    testImplementation("org.hamcrest:hamcrest:2.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.2")
 }
 
 test {
@@ -52,26 +59,24 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.9
+                minimum = 0.90
             }
         }
-
         rule {
-            enabled = false
-            element = 'CLASS'
-
             limit {
-                counter = 'LINE'
-                value = 'TOTALCOUNT'
-                maximum = 0.9
+                counter = 'BRANCH'
+                minimum = 0.90
             }
         }
     }
 }
 
+check.dependsOn jacocoTestCoverageVerification
+
 checkstyle {
     toolVersion '8.36.2'
     configFile file("${rootDir}/config/checkstyle/PLP_checkstyle.xml")
+    checkstyleTest.enabled = false
 }
 checkstyleMain {
     source='src/main/java'

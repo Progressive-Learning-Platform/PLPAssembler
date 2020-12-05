@@ -6,10 +6,14 @@ import org.plp.isa.AsmProgram;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This is a PLP representation of {@link AsmProgram}. This holds all the asm files a PLP
@@ -55,7 +59,17 @@ public class PlpProgram implements AsmProgram {
      * @throws UnsupportedOperationException - thrown until implemented
      */
     private void loadFilesToMemory() throws IOException {
-        throw new UnsupportedOperationException("loadFilesToMemory not implemented");
+        if(Files.exists(programDirectory)) {
+            try (Stream<Path> paths = Files.walk(programDirectory)) {
+                List<Path> programFiles = paths.filter(Files::isRegularFile)
+                        .collect(Collectors.toList());
+                for(Path path: programFiles) {
+                    AsmFile asmFile = new PlpFile(path);
+                    filesInProgram.put(asmFile.getFileName(), asmFile);
+                }
+
+            }
+        }
     }
 
     /**
@@ -81,15 +95,30 @@ public class PlpProgram implements AsmProgram {
     }
 
     /**
-     * Adds the given {@link AsmFile} to this program
-     *
-     * @param asmFile - AsmFile to be added to the program
-     * @return - true if successfully added the file to program, false otherwise
+     * Copy the given {@link AsmFile} to this program. It is going to copy the content to the passed
+     * {@link AsmFile} as {@link AsmFile} path is immutable.
+     * @param asmFile AsmFile to be added to the program
+     * @return returns the new {@link AsmFile} created from the content of passed {@link AsmFile}
+     * @throws IOException if already a {@link AsmFile} with same name exists in program
      */
     @Override
-    public boolean addAsmFileToProgram(AsmFile asmFile) {
-        //ToBe Implemented
-        return false;
+    public AsmFile copyAsmFileToProgram(AsmFile asmFile) throws IOException{
+        AsmFile newFile = null;
+        if(!filesInProgram.containsKey(asmFile.getFileName())) {
+
+            Path newFilePath = Paths.get(programDirectory.toString(), asmFile.getFileName());
+            Files.copy(asmFile.getFilePath(),
+                    newFilePath,
+                    StandardCopyOption.REPLACE_EXISTING);
+
+            newFile = new PlpFile(newFilePath);
+            filesInProgram.put(newFile.getFileName(), newFile);
+        } else {
+            throw new IOException(String.format("File with same name %s exists in the program %s",
+                    asmFile.getFileName(),
+                    programDirectory.getFileName()));
+        }
+        return newFile;
     }
 
     /**
@@ -97,11 +126,20 @@ public class PlpProgram implements AsmProgram {
      *
      * @param fileName - name of the {@link AsmFile} to be created
      * @return - {@link AsmFile} successfully created in the program, otherwise false
+     * @throws IOException {@link AsmFile} file with same name already exists
      */
     @Override
-    public AsmFile createAsmFileInProgram(String fileName) {
-        //ToBe Implemented
-        return null;
+    public AsmFile createAsmFileInProgram(String fileName) throws IOException{
+        AsmFile plpFile = null;
+        if(filesInProgram.containsKey(fileName)) {
+            throw new IOException(String.format("File with same name %s exists in the program %s",
+                    fileName,
+                    programDirectory.getFileName()));
+        } else {
+            plpFile = new PlpFile(Paths.get(programDirectory.toString(), fileName));
+            filesInProgram.put(plpFile.getFileName(), plpFile);
+        }
+        return plpFile;
     }
 
     /**
