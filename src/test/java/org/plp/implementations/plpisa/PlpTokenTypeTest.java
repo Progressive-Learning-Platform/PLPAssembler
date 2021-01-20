@@ -346,27 +346,4 @@ public class PlpTokenTypeTest {
         Assertions.assertFalse(numericPattern.matcher(invalidNumber7).matches());
     }
 
-    @Test
-    public void testNewlineToken() {
-        Pattern newlinePattern = Pattern.compile(PlpTokenType.NEWLINE.regex());
-
-        String validNewLineToken1 = "\n";
-        String validNewLineToken2 = "\t\t";
-        String validNewLineToken3 = "\r\f";
-        String validNewLineToken4 = "\n\n\t\t\t\r\f";
-        String validNewLineToken5 = "  ";
-
-        String invalidNewLineToken1 = "asdf\t\tasf\n";
-        String invalidNewLineToken2 = "a\n";
-
-        Assertions.assertTrue(newlinePattern.matcher(validNewLineToken1).matches());
-        Assertions.assertTrue(newlinePattern.matcher(validNewLineToken2).matches());
-        Assertions.assertTrue(newlinePattern.matcher(validNewLineToken3).matches());
-        Assertions.assertTrue(newlinePattern.matcher(validNewLineToken4).matches());
-        Assertions.assertTrue(newlinePattern.matcher(validNewLineToken5).matches());
-
-        Assertions.assertFalse(newlinePattern.matcher(invalidNewLineToken1).matches());
-        Assertions.assertFalse(newlinePattern.matcher(invalidNewLineToken2).matches());
-    }
-
 }

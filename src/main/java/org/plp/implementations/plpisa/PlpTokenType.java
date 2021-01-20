@@ -84,13 +84,7 @@ public enum PlpTokenType implements AsmTokenType {
      * We can have decimal, hexadecimal and binary number representation
      * Example 34543 -45 0xFEED 0b010101
      */
-    NUMERIC("((-?[1-9]\\d*)|0+|0x([0-9a-fA-F]+)|0b([01]+))\\b"),
-
-    /**
-     * This will identify any of the newline, empty lines,  tab representation
-     * Example \n
-     */
-    NEWLINE("^\\s*$");
+    NUMERIC("((-?[1-9]\\d*)|0+|0x([0-9a-fA-F]+)|0b([01]+))\\b");
 
 
     private final String regex;
