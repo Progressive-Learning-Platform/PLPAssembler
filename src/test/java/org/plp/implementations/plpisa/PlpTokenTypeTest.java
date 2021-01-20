@@ -20,7 +20,7 @@ public class PlpTokenTypeTest {
         String invalidLabel4 = "asdf asdfs:";
         String invalidLabel5 = "asdf_asf";
 
-        Pattern labelDefPattern = Pattern.compile(PlpTokenType.LABEL_DEFINITION.regex());
+        Pattern labelDefPattern = Pattern.compile(PlpTokenType.LABELDEFINITION.regex());
         Assertions.assertTrue(labelDefPattern.matcher(validLabel1).matches());
         Assertions.assertTrue(labelDefPattern.matcher(validLabel2).matches());
         Assertions.assertTrue(labelDefPattern.matcher(validLabel3).matches());
@@ -72,6 +72,43 @@ public class PlpTokenTypeTest {
     }
 
     @Test
+    public void testPseudoInstructionToken() {
+        Pattern instructionPattern = Pattern.compile(PlpTokenType.PSEUDOINSTRUCTION.regex());
+
+        String validInstruction1 = "b";
+        String validInstruction2 = "MOVE";
+        String validInstruction3 = "Pop";
+        String validInstruction4 = "push";
+        String validInstruction5 = "li";
+
+        String invalidInstruction1 = ".org";
+        String invalidInstruction2 = "$t1";
+        String invalidInstruction3 = "0x40";
+        String invalidInstruction4 = "test_main:";
+        String invalidInstruction5 = "($t2)";
+        String invalidInstruction6 = "asdf asdf";
+        String invalidInstruction7 = "addu";
+        String invalidInstruction8 = "as-asdf";
+        String invalidInstruction9 = "as89";
+
+        Assertions.assertTrue(instructionPattern.matcher(validInstruction1).matches());
+        Assertions.assertTrue(instructionPattern.matcher(validInstruction2).matches());
+        Assertions.assertTrue(instructionPattern.matcher(validInstruction3).matches());
+        Assertions.assertTrue(instructionPattern.matcher(validInstruction4).matches());
+        Assertions.assertTrue(instructionPattern.matcher(validInstruction5).matches());
+
+        Assertions.assertFalse(instructionPattern.matcher(invalidInstruction1).matches());
+        Assertions.assertFalse(instructionPattern.matcher(invalidInstruction2).matches());
+        Assertions.assertFalse(instructionPattern.matcher(invalidInstruction3).matches());
+        Assertions.assertFalse(instructionPattern.matcher(invalidInstruction4).matches());
+        Assertions.assertFalse(instructionPattern.matcher(invalidInstruction5).matches());
+        Assertions.assertFalse(instructionPattern.matcher(invalidInstruction6).matches());
+        Assertions.assertFalse(instructionPattern.matcher(invalidInstruction7).matches());
+        Assertions.assertFalse(instructionPattern.matcher(invalidInstruction8).matches());
+        Assertions.assertFalse(instructionPattern.matcher(invalidInstruction9).matches());
+    }
+
+    @Test
     public void testLabelUsageToken() {
         String validLabel1 = "main";
         String validLabel2 = "test_label";
@@ -84,7 +121,7 @@ public class PlpTokenTypeTest {
         String invalidLabel4 = "asdf asdfs";
         String invalidLabel6 = "main:";
 
-        Pattern labelUsagePattern = Pattern.compile(PlpTokenType.LABEL_USAGE.regex());
+        Pattern labelUsagePattern = Pattern.compile(PlpTokenType.LABELUSAGE.regex());
         Assertions.assertTrue(labelUsagePattern.matcher(validLabel1).matches());
         Assertions.assertTrue(labelUsagePattern.matcher(validLabel2).matches());
         Assertions.assertTrue(labelUsagePattern.matcher(validLabel3).matches());
@@ -105,8 +142,8 @@ public class PlpTokenTypeTest {
         String validRegister2 = "$zero";
         String validRegister3 = "$0";
         String validRegister4 = "$ir";
+        String validRegister5 = "$1";
 
-        String invalidRegister1 = "$1";
         String invalidRegister2 = "t1";
         String invalidRegister3 = "abc";
         String invalidRegister4 = ".org";
@@ -116,8 +153,8 @@ public class PlpTokenTypeTest {
         Assertions.assertTrue(registerPattern.matcher(validRegister2).matches());
         Assertions.assertTrue(registerPattern.matcher(validRegister3).matches());
         Assertions.assertTrue(registerPattern.matcher(validRegister4).matches());
+        Assertions.assertTrue(registerPattern.matcher(validRegister5).matches());
 
-        Assertions.assertFalse(registerPattern.matcher(invalidRegister1).matches());
         Assertions.assertFalse(registerPattern.matcher(invalidRegister2).matches());
         Assertions.assertFalse(registerPattern.matcher(invalidRegister3).matches());
         Assertions.assertFalse(registerPattern.matcher(invalidRegister4).matches());
@@ -162,7 +199,7 @@ public class PlpTokenTypeTest {
 
     @Test
     public void testParenthesisRegisterToken() {
-        Pattern parenthesisRegisterPattern = Pattern.compile(PlpTokenType.PARENTHESIS_REGISTER.regex());
+        Pattern parenthesisRegisterPattern = Pattern.compile(PlpTokenType.PARENTHESISREGISTER.regex());
 
         String validParenthesisRegister1 = "($zero)";
         String validParenthesisRegister2 = "($t1)";
@@ -311,7 +348,7 @@ public class PlpTokenTypeTest {
 
     @Test
     public void testNewlineToken() {
-        Pattern newlinePattern = Pattern.compile(PlpTokenType.NEW_LINE.regex());
+        Pattern newlinePattern = Pattern.compile(PlpTokenType.NEWLINE.regex());
 
         String validNewLineToken1 = "\n";
         String validNewLineToken2 = "\t\t";
