@@ -1,63 +1,58 @@
 package org.plp.isa;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 /**
  * This is the assembly program representation. It also handles the disk I/O of the program.
  */
 public interface AsmFile {
-    /**
-     * This will write the in-memory instructions of the program represented as
-     * {@link #getInstructions()} to disk at the path given by {@link #getFilePath()}
-     *
-     * @return - true if writing to the file was successful, false otherwise
-     * @throws IOException any file write related IO Exception
-     */
-    boolean writeToFile() throws IOException;
 
     /**
-     * This will provide the disk file path where the AsmFile will be written to
-     * by {@link #writeToFile()} and similarly from where this will read the file
-     * in {@link #readFromFile()}
-     * @return Path of the file
+     * This will add the list of instructions at the end of file
+     * @param instructions list of instructions to be added
+     * @throws IOException if it fails to update the physical file
      */
-    Path getFilePath();
+    void appendInstructionsToFile(List<String> instructions) throws IOException;
 
     /**
-     * Given an instruction of the program, this will add it to its in-memory representation
-     * of that program
-     *
-     * @param instruction - Instruction to be added to its in-memory representation
-     * @return - true if instruction is successfully added, false otherwise
+     * This will add list of instructions from the lineNumber specified. \
+     * If there are fewer lines in the file, then it will add lines at the end.
+     * @param lineNumber Line number where the instructions need to be added
+     * @param instructions list of instructions to be added to file.
+     * @throws IOException if it fails to update the physical file
      */
-    boolean addInstructionToFile(String instruction);
+    void addInstructionsAtLine(int lineNumber, List<String> instructions) throws IOException;
+
+    /**
+     * This will remove an instruction from the file at the given line number
+     * @param lineNumber line number at which instruction needs to be removed.
+     * @throws IOException if it fails to update the physical file
+     */
+    void removeInstructionAtLine(int lineNumber) throws IOException;
+
+    /**
+     * This will remove all the instructions present in the file
+     * @throws IOException if it fails to update the physical file
+     */
+    void clearInstructions() throws IOException;
 
     /**
      * Given a lineNumber, obtain the instruction present at that line
      *
      * @param lineNumber - line number in the file/program
      * @return - instruction present at that line
+     * @throws IOException if there are no instructions at that line number
      */
-    String getInstructionAtLine(int lineNumber);
+    String getInstructionAtLine(int lineNumber) throws IOException;
 
     /**
      * Get all the instructions stored in memory of this file.
      *
-     * Use this only after {@link #readFromFile()} or {@link #addInstructionToFile(String)}
-     *
      * @return - list of instructions present in the file.
      */
-    List<String> getInstructions();
+    List<String> getInstructionsOfFile();
 
-    /**
-     * This will read the contents of the file present at {@link #getFilePath()} and store
-     * all the instructions contained in the file in memory.
-     *
-     * @throws IOException - thrown if file cannot be read
-     */
-    void readFromFile() throws IOException;
 
     /**
      * Name of the file in which this file will be stored within in the {@link AsmProgram}
@@ -66,4 +61,9 @@ public interface AsmFile {
      */
     String getFileName();
 
+    /**
+     * The {@link AsmProgram} to which this {@link AsmFile} belongs to
+     * @return {@link AsmProgram} of the {@link AsmFile}
+     */
+    AsmProgram getAsmProgramOfFile();
 }

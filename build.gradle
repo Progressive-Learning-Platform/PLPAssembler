@@ -12,19 +12,25 @@ repositories {
     mavenCentral()
 }
 
+sourceCompatibility = 1.11
+targetCompatibility = 1.11
+
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
+    compile 'com.fasterxml.jackson.core:jackson-core:2.12.2'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.12.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.12.2'
+
     testCompileOnly 'org.projectlombok:lombok:1.18.16'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 
-    testImplementation("com.google.jimfs:jimfs:1.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
-    testImplementation("org.mockito:mockito-junit-jupiter:3.5.10")
-    testImplementation("org.hamcrest:hamcrest:2.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.2")
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.5.10'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.6.2'
 }
 
 test {

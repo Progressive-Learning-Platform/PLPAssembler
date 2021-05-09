@@ -11,7 +11,7 @@ public enum PlpTokenType implements AsmTokenType {
      * This token identifies all the label definitions
      * Example  main:
      */
-    LABEL_DEFINITION("\\b[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]:\\B"),
+    LABELDEFINITION("\\b[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]:\\B"),
 
     /**
      *  This tells what can be a possible instruction token, whether this instruction
@@ -19,21 +19,30 @@ public enum PlpTokenType implements AsmTokenType {
      *  So this will include pseudo instruction as well as actual instructions
      *  Example addu
      */
-    INSTRUCTION("\\b[a-zA-Z]+\\b"),
+    INSTRUCTION("(?i)\\b(addu|addiu|subu|mullo|mulhi|lui|and|andi|or|ori|" +
+            "nor|slt|slti|sltu|sltiu|sll|sllv|srl|srlv|beq|bne|j|jal|jr|jalr|" +
+            "lw|sw)\\b"),
+
+    /**
+     * This tells what are the possible peudo instruction tokens.
+     * Example nop, b, move
+     */
+    PSEUDOINSTRUCTION("(?i)\\b(nop|b|move|push|pop|li|call|return|save|restore|" +
+            "lwm|swm)\\b"),
 
     /**
      * This token represents whenever label is used inside the instruction
      * example branch destination
      * Example MAIN
      */
-    LABEL_USAGE("\\b[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]\\b"),
+    LABELUSAGE("\\b[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]\\b"),
 
     /**
      * Possible register patterns, this can pick some registers which is not
      * defined at in the Plp yet
      * Example $t1 $0
      */
-    REGISTER("\\$(0|([a-zA-Z]+)|([a-zA-Z][a-zA-Z0-9]+))"),
+     REGISTER("\\$([a-zA-Z]|[0-9])+"),
 
     /**
      * This represents the comments of Plp program
@@ -51,7 +60,7 @@ public enum PlpTokenType implements AsmTokenType {
      * For instructions like load and store words we use register with a number
      * Example lw $t0, 8($t1)
      */
-    PARENTHESIS_REGISTER("\\(\\$(0|([a-zA-Z]+)|([a-zA-Z][a-zA-Z0-9]+))\\)"),
+    PARENTHESISREGISTER("\\(\\$([a-zA-Z]|[0-9])+\\)"),
 
     /**
      * This represents any assembler directives
@@ -75,13 +84,8 @@ public enum PlpTokenType implements AsmTokenType {
      * We can have decimal, hexadecimal and binary number representation
      * Example 34543 -45 0xFEED 0b010101
      */
-    NUMERIC("((-?[1-9]\\d*)|0+|0x([0-9a-fA-F]+)|0b([01]+))\\b"),
+    NUMERIC("((-?[1-9]\\d*)|0+|0x([0-9a-fA-F]+)|0b([01]+))\\b");
 
-    /**
-     * This will identify any of the newline, empty lines,  tab representation
-     * Example \n
-     */
-    NEW_LINE("^\\s*$");
 
     private final String regex;
 
