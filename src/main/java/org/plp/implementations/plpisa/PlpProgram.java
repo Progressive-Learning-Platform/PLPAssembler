@@ -205,7 +205,7 @@ public class PlpProgram implements AsmProgram {
      */
     @Override
     public void loadProgram() throws IOException{
-        try(var zipFile = new ZipFile(this.programLocation.toString())) {
+        try(ZipFile zipFile = new ZipFile(this.programLocation.toString())) {
             ZipEntry metaDataEntry = zipFile.getEntry("metadata.json");
             this.plpProgramMetaData = objectMapper.readValue(zipFile.getInputStream(metaDataEntry),
                     PlpProgramMetaData.class);
