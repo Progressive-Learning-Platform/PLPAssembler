@@ -20,7 +20,7 @@
    <!-- Checks for Line Length 									-->
    <!-- See https://checkstyle.sourceforge.io/config_sizes.html -->
     <module name="LineLength">
-		<property name="max" value="100"/>
+		<property name="max" value="120"/>
 	</module>
     <module name="TreeWalker">
 		<!-- Checks package naming -->

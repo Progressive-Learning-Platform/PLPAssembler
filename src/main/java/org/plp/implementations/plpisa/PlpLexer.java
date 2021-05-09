@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 
 /**
  * Given a line, this will provide a list of {@link PlpToken}
+ * Some of the ideas taken from
+ * http://giocc.com/writing-a-lexer-in-java-1-7-using-regex-named-capturing-groups.html
  */
 public class PlpLexer implements AsmLexer {
 

@@ -1,88 +1,108 @@
 package org.plp.implementations.plpisa;
 
-import lombok.NonNull;
 import org.plp.isa.AsmFile;
 import org.plp.isa.AsmProgram;
-import org.plp.isa.exceptions.AsmAssemblerException;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Collections;
+import java.util.ArrayList;
 
 /**
  * This is an in memory representation of an asm file {@link AsmFile}.
  * This will map to a file path and will be part of {@link PlpProgram}
  */
 public class PlpFile implements AsmFile {
-    private final Path filePath;
-    private final List<String> fileContent;
+
+    private final String fileName;
+    private final AsmProgram asmProgram;
+    private final List<String> instructions;
 
     /**
-     * Constructor for a PlpFile
-     *
-     * @param filePath - path to the physical file containing assembly commands
-     * @throws IOException - thrown if file cannot be read
+     * Constructor to create an {@link AsmFile} related to PLP
+     * @param fileName Name of the File to be created
+     * @param asmProgram {@link PlpProgram} where this file will exists
      */
-    public PlpFile(Path filePath) throws IOException{
-        validateFilePath(filePath);
-        this.filePath = filePath;
-        this.fileContent = new ArrayList<>();
-        readFromFile();
+    public PlpFile(String fileName, AsmProgram asmProgram) {
+        this.fileName = fileName;
+        this.asmProgram = asmProgram;
+        this.instructions = new ArrayList<>();
     }
 
-    private void validateFilePath(Path filePath) throws IOException {
-        if(Files.exists(filePath) && Files.isDirectory(filePath)) {
-            throw new IOException(
-                    String.format("Given path - %s is a directory, will not be able " +
-                                    "to create the PlpFile", filePath.toString()));
+    /**
+     * Constructor to create an {@link AsmFile} related to PLP with the instructions
+     * @param fileName Name of the File to be created
+     * @param asmProgram {@link PlpProgram} where this file will exists
+     * @param instructions set of instructions present in this file
+     */
+    public PlpFile(String fileName, AsmProgram asmProgram, List<String> instructions) {
+        this.fileName = fileName;
+        this.asmProgram = asmProgram;
+        this.instructions = new ArrayList<>(instructions);
+    }
+
+    /**
+     * This will add the list of instructions at the end of file
+     *
+     * @param instructions list of instructions to be added
+     * @throws IOException if it fails to update the physical file
+     */
+    @Override
+    public void appendInstructionsToFile(List<String> instructions) throws IOException {
+        this.instructions.addAll(instructions);
+        this.asmProgram.saveProgram();
+    }
+
+    /**
+     * This will add list of instructions from the lineNumber specified. \
+     * If there are fewer lines in the file, then it will add lines at the end.
+     *
+     * @param lineNumber   Line number where the instructions need to be added
+     * @param instructions list of instructions to be added to file.
+     * @throws IOException if it fails to update the physical file
+     */
+    @Override
+    public void addInstructionsAtLine(int lineNumber, List<String> instructions)
+            throws IOException {
+        if(lineNumber <= 0) {
+            throw new IOException("Invalid Line Number; line number should be greater than 0");
+        } else if(this.instructions.size() == 0 && lineNumber != 1) {
+            throw new IOException("Invalid Line Number; Max line number can be 1");
+        } else if(this.instructions.size() != 0 && lineNumber > this.instructions.size()) {
+            throw new IOException("Invalid Line Number; Max line number can be " + this.instructions.size());
+        } else {
+            this.instructions.addAll(lineNumber - 1, instructions);
+            this.asmProgram.saveProgram();
         }
     }
 
     /**
-     * This will write the in-memory instructions of the program represented as
-     * {@link #getInstructions()} to disk at the path given by {@link #getFilePath()}
+     * This will remove an instruction from the file at the given line number
      *
-     * @return - true if writing to the file was successful, false otherwise
-     * @throws IOException any file write related IO errors
+     * @param lineNumber line number at which instruction needs to be removed.
+     * @throws IOException if it fails to update the physical file
      */
     @Override
-    public boolean writeToFile() throws IOException{
-        try(BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8)) {
-            for(String line: fileContent) {
-                writer.write(line);
-                writer.newLine();
-            }
+    public void removeInstructionAtLine(int lineNumber) throws IOException {
+        if(lineNumber > 0 && lineNumber <= this.instructions.size()) {
+            this.instructions.remove(lineNumber - 1);
+            this.asmProgram.saveProgram();
+
+            return;
         }
-        return true;
+        throw new IOException(
+                "Invalid line number; Minimum to be 1 and Max line number can be: " + this.instructions.size());
     }
 
     /**
-     * This will provide the disk file path where the AsmFile will be written to by
-     * {@link #writeToFile()} and similarly from where this will read the file in
-     * {@link #readFromFile()}
+     * This will remove all the instructions present in the file
      *
-     * @return - absolute path of the file
+     * @throws IOException if it fails to update the physical file
      */
     @Override
-    public Path getFilePath() {
-        return filePath;
-    }
-
-    /**
-     * Given an instruction of the program, this will add it to its in-memory representation
-     * of that program
-     *
-     * @param instruction - Instruction to be added to its in-memory representation
-     * @return - true if instruction is successfully added, false otherwise
-     */
-    @Override
-    public boolean addInstructionToFile(@NonNull String instruction) {
-        return fileContent.add(instruction);
+    public void clearInstructions() throws IOException {
+        this.instructions.clear();
+        this.asmProgram.saveProgram();
     }
 
     /**
@@ -90,42 +110,27 @@ public class PlpFile implements AsmFile {
      *
      * @param lineNumber - line number in the file/program
      * @return - instruction present at that line
-     * @throws AsmAssemblerException - thrown if encounters an invalid line number
+     * @throws IOException if there are no instructions at that line number
      */
     @Override
-    public String getInstructionAtLine(int lineNumber) throws AsmAssemblerException {
-        if(lineNumber < 1 || lineNumber > fileContent.size()) {
-            throw new AsmAssemblerException(
-                    String.format("Invalid line number for the file. Line number should be " +
-                                    "between 1 and %d", fileContent.size()));
+    public String getInstructionAtLine(int lineNumber) throws IOException {
+        if(lineNumber > 0 && lineNumber <= this.instructions.size()) {
+            return this.instructions.get(lineNumber - 1);
         }
-        return fileContent.get(lineNumber - 1);
+
+        throw new IOException(
+                "Invalid line number; " +
+                        "Minimum line number can be 1 and Max line number can be: " + this.instructions.size());
     }
 
     /**
      * Get all the instructions stored in memory of this file.
      *
-     * Use this only after {@link #readFromFile()} or {@link #addInstructionToFile(String)}
-     *
      * @return - list of instructions present in the file.
      */
     @Override
-    public List<String> getInstructions() {
-        return Collections.unmodifiableList(fileContent);
-    }
-
-    /**
-     * This will read the contents of the file present at {@link #getFilePath()} and store
-     * all the instructions contained in the file in memory.
-     *
-     * @throws IOException - thrown if file cannot be read
-     */
-    @Override
-    public void readFromFile() throws IOException {
-        if(Files.exists(filePath)) {
-            fileContent.clear();
-            fileContent.addAll(Files.readAllLines(filePath));
-        }
+    public List<String> getInstructionsOfFile() {
+        return Collections.unmodifiableList(this.instructions);
     }
 
     /**
@@ -135,6 +140,16 @@ public class PlpFile implements AsmFile {
      */
     @Override
     public String getFileName() {
-        return filePath.getFileName().toString();
+        return this.fileName;
+    }
+
+    /**
+     * The {@link AsmProgram} to which this {@link AsmFile} belongs to
+     *
+     * @return {@link AsmProgram} of the {@link AsmFile}
+     */
+    @Override
+    public AsmProgram getAsmProgramOfFile() {
+        return this.asmProgram;
     }
 }

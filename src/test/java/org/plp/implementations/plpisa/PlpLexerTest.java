@@ -196,7 +196,7 @@ public class PlpLexerTest {
     }
 
     @Test
-    public void testInvlaidTokenAtTheEndLex() {
+    public void testInvalidTokenAtTheEndLex() {
         String input = "b testbranch(";
 
         PlpLexer lexer = new PlpLexer();
