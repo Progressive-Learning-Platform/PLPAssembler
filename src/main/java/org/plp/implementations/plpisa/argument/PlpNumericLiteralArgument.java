@@ -10,6 +10,8 @@ import org.plp.isa.AsmArgumentType;
  */
 public class PlpNumericLiteralArgument implements AsmArgument {
     private final String argument;
+    private final int base2 = 2;
+    private final int base16 = 16;
 
     /**
      * Constructs an {@link AsmArgument} that holds an integer
@@ -23,11 +25,11 @@ public class PlpNumericLiteralArgument implements AsmArgument {
     public long encode() {
         // parse argument
         if('b' == argument.charAt(0)) {
-            return Integer.parseInt(argument.substring(1), 2);
+            return Integer.parseInt(argument.substring(1), base2);
         }
 
         if(argument.startsWith("0x")) {
-            return Integer.parseInt(argument.substring(2), 16);
+            return Integer.parseInt(argument.substring(2), base16);
         }
         return Integer.parseInt(argument);
     }
