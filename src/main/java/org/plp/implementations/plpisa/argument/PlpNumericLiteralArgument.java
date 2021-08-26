@@ -22,6 +22,13 @@ public class PlpNumericLiteralArgument implements AsmArgument {
     @Override
     public long encode() {
         // parse argument
+        if('b' == argument.charAt(0)) {
+            return Integer.parseInt(argument.substring(1), 2);
+        }
+
+        if(argument.startsWith("0x")) {
+            return Integer.parseInt(argument.substring(2), 16);
+        }
         return Integer.parseInt(argument);
     }
 
