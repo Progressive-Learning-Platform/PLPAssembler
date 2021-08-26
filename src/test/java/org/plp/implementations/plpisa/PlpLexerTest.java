@@ -64,17 +64,15 @@ public class PlpLexerTest {
         PlpLexer lexer = new PlpLexer();
         List<AsmToken> tokens = lexer.lex(input);
 
-        Assertions.assertEquals(5, tokens.size());
+        Assertions.assertEquals(4, tokens.size());
         Assertions.assertEquals(PlpTokenType.INSTRUCTION.name(), tokens.get(0).getTokenType().toString());
         Assertions.assertEquals("lw", tokens.get(0).getValue());
         Assertions.assertEquals(PlpTokenType.REGISTER.name(), tokens.get(1).getTokenType().toString());
         Assertions.assertEquals("$t0", tokens.get(1).getValue());
         Assertions.assertEquals(PlpTokenType.COMMA.name(), tokens.get(2).getTokenType().toString());
         Assertions.assertEquals(",", tokens.get(2).getValue());
-        Assertions.assertEquals(PlpTokenType.NUMERIC.name(), tokens.get(3).getTokenType().toString());
-        Assertions.assertEquals("8", tokens.get(3).getValue());
-        Assertions.assertEquals(PlpTokenType.PARENTHESISREGISTER.name(), tokens.get(4).getTokenType().toString());
-        Assertions.assertEquals("($t1)", tokens.get(4).getValue());
+        Assertions.assertEquals(PlpTokenType.MEMORYLOCATION.name(), tokens.get(3).getTokenType().toString());
+        Assertions.assertEquals("8($t1)", tokens.get(3).getValue());
 
     }
 

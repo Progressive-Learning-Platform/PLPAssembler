@@ -22,6 +22,8 @@ public class PlpMemoryArgument implements AsmArgument {
 
     @Override
     public long encode() {
+        // for PLP only possible address format would be number(register)
+        // Example: 45($t1)
         int offset = 0;
         int start = argument.indexOf("(");
         // strip offset, $, and parentheses from the argument

@@ -198,13 +198,13 @@ public class PlpTokenTypeTest {
     }
 
     @Test
-    public void testParenthesisRegisterToken() {
-        Pattern parenthesisRegisterPattern = Pattern.compile(PlpTokenType.PARENTHESISREGISTER.regex());
+    public void testMemoryLocationToken() {
+        Pattern parenthesisRegisterPattern = Pattern.compile(PlpTokenType.MEMORYLOCATION.regex());
 
-        String validParenthesisRegister1 = "($zero)";
-        String validParenthesisRegister2 = "($t1)";
-        String validParenthesisRegister3 = "($at)";
-        String validParenthesisRegister4 = "($0)";
+        String validParenthesisRegister1 = "67($zero)";
+        String validParenthesisRegister2 = "0($t1)";
+        String validParenthesisRegister3 = "0xA($at)";
+        String validParenthesisRegister4 = "3($0)";
 
         String invalidParenthesisRegister1 = "(asdf)";
         String invalidParenthesisRegister2 = "(1)";
@@ -213,6 +213,7 @@ public class PlpTokenTypeTest {
         String invalidParenthesisRegister5 = "$t1)";
         String invalidParenthesisRegister6 = "()";
         String invalidParenthesisRegister7 = "(.t1)";
+        String invalidParenthesisRegister8 = "89(t1)";
 
         Assertions.assertTrue(parenthesisRegisterPattern.matcher(validParenthesisRegister1).matches());
         Assertions.assertTrue(parenthesisRegisterPattern.matcher(validParenthesisRegister2).matches());
@@ -226,6 +227,7 @@ public class PlpTokenTypeTest {
         Assertions.assertFalse(parenthesisRegisterPattern.matcher(invalidParenthesisRegister5).matches());
         Assertions.assertFalse(parenthesisRegisterPattern.matcher(invalidParenthesisRegister6).matches());
         Assertions.assertFalse(parenthesisRegisterPattern.matcher(invalidParenthesisRegister7).matches());
+        Assertions.assertFalse(parenthesisRegisterPattern.matcher(invalidParenthesisRegister8).matches());
 
     }
 

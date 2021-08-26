@@ -60,7 +60,7 @@ public enum PlpTokenType implements AsmTokenType {
      * For instructions like load and store words we use register with a number
      * Example lw $t0, 8($t1)
      */
-    PARENTHESISREGISTER("\\(\\$([a-zA-Z]|[0-9])+\\)"),
+    MEMORYLOCATION("((-?[1-9]\\d*)|0+|0x([0-9a-fA-F]+)|0b([01]+))\\(\\$([a-zA-Z]|[0-9])+\\)"),
 
     /**
      * This represents any assembler directives

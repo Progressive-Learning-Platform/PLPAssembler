@@ -23,7 +23,7 @@ public class PlpLabelArgument implements AsmArgument {
 
     @Override
     public long encode() {
-        if(!PlpAssembler.SYMBOL_TABLE.symbolExists(argument)) {
+        if(!PlpAssembler.SYMBOL_TABLE.isSymbolExists(argument)) {
             throw new PlpArgumentException("Label does not exist in memory");
         }
         return PlpAssembler.SYMBOL_TABLE.getAddressOfSymbol(argument);

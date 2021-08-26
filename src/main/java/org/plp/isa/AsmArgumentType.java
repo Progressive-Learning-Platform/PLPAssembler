@@ -10,11 +10,8 @@ package org.plp.isa;
 public interface AsmArgumentType {
 
     /**
-     * Given an instruction's argument, this will provide the corresponding implementation
-     * of the {@link AsmArgument}
-     *
-     * @param argumentContent string representation of the instruction's argument
-     * @return {@link AsmArgument} representation of argument passed
+     * The {@link AsmTokenType} which has the regex representation of given Argument
+     * @return {@link AsmTokenType} of the {@link AsmArgument}
      */
-    AsmArgument parse(String argumentContent);
+    public abstract AsmTokenType tokenType();
 }
