@@ -1,18 +1,25 @@
 package org.plp.implementations.plpisa;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.plp.implementations.plpisa.argument.*;
 import org.plp.implementations.plpisa.exceptions.PlpArgumentException;
 import org.plp.isa.AsmArgument;
 
+@ExtendWith(MockitoExtension.class)
 public class PlpArgumentProcessorTest {
     PlpArgumentProcessor argumentProcessor;
 
-    @BeforeAll
+    @Mock
+    PlpSymbolTable plpSymbolTable;
+
+    @BeforeEach
     public void setup() {
-        argumentProcessor = new PlpArgumentProcessor();
+        argumentProcessor = new PlpArgumentProcessor(plpSymbolTable);
     }
 
     @Test

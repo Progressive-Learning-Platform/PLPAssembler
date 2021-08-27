@@ -8,7 +8,7 @@ import org.plp.isa.exceptions.AsmAssemblerException;
  */
 public class PlpArgumentException extends AsmAssemblerException {
     /**
-     * Constructor that requires a meesage to describe the specific
+     * Constructor that requires a message to describe the specific
      * issue with the argument
      * @param message Explanation of the issue with the argument
      */

@@ -1,7 +1,7 @@
 package org.plp.implementations.plpisa.argument;
 
 import org.plp.implementations.plpisa.PlpArgumentType;
-import org.plp.implementations.plpisa.PlpAssembler;
+import org.plp.implementations.plpisa.PlpSymbolTable;
 import org.plp.implementations.plpisa.exceptions.PlpArgumentException;
 import org.plp.isa.AsmArgument;
 import org.plp.isa.AsmArgumentType;
@@ -12,21 +12,24 @@ import org.plp.isa.AsmArgumentType;
  */
 public class PlpLabelArgument implements AsmArgument {
     private final String argument;
+    private final PlpSymbolTable symbolTable;
 
     /**
      * Constructs an {@link AsmArgument} that holds a Label
      * @param argument Label to be stored
+     * @param symbolTable {@link PlpSymbolTable} where labels address is present
      */
-    public PlpLabelArgument(String argument) {
+    public PlpLabelArgument(String argument, PlpSymbolTable symbolTable) {
         this.argument = argument;
+        this.symbolTable = symbolTable;
     }
 
     @Override
     public long encode() {
-        if(!PlpAssembler.SYMBOL_TABLE.isSymbolExists(argument)) {
-            throw new PlpArgumentException("Label does not exist in memory");
+        if(!symbolTable.isSymbolExists(argument)) {
+            throw new PlpArgumentException("Label "+ argument +" does not exist in memory");
         }
-        return PlpAssembler.SYMBOL_TABLE.getAddressOfSymbol(argument);
+        return symbolTable.getAddressOfSymbol(argument);
     }
 
     @Override

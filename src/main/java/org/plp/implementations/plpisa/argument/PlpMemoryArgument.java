@@ -1,7 +1,6 @@
 package org.plp.implementations.plpisa.argument;
 
 import org.plp.implementations.plpisa.PlpArgumentType;
-import org.plp.implementations.plpisa.PlpAssembler;
 import org.plp.isa.AsmArgument;
 import org.plp.isa.AsmArgumentType;
 
@@ -11,6 +10,8 @@ import org.plp.isa.AsmArgumentType;
  */
 public class PlpMemoryArgument implements AsmArgument {
     private final String argument;
+    private PlpNumericLiteralArgument offset;
+    private PlpRegisterArgument register;
 
     /**
      * Constructs an {@link AsmArgument} that holds a memory argument
@@ -24,16 +25,40 @@ public class PlpMemoryArgument implements AsmArgument {
     public long encode() {
         // for PLP only possible address format would be number(register)
         // Example: 45($t1)
-        int offset = 0;
-        int start = argument.indexOf("(");
-        // strip offset, $, and parentheses from the argument
-        long memory = PlpAssembler.SYMBOL_TABLE
-                .getAddressOfSymbol(argument.substring(start + 2, argument.length() - 1));
-        // if the ( is not at index 0, then an offset exists -> ($t3) vs 4($t3)
-        if(start != 0) {
-            offset = Integer.parseInt(argument.substring(0, start));
+        // It uses the register part and offset part separately for encoding.
+
+        String[] parts = argument.split("\\(");
+        offset = new PlpNumericLiteralArgument(parts[0]);
+        register = new PlpRegisterArgument(parts[1].substring(0, parts[1].length()));
+
+        return offset.encode();
+    }
+
+    /**
+     * This will provide the register number present in memory argument
+     * @return register number
+     */
+    public long registerEncode() {
+        if(register == null) {
+            encode();
         }
-        return memory + offset;
+        return register.encode();
+    }
+
+    /**
+     * This provides the Register part of the Argument
+     * @return {@link PlpRegisterArgument} register part of memory argument
+     */
+    public PlpRegisterArgument getRegisterArgumentOfMemoryArg() {
+        return register;
+    }
+
+    /**
+     * This provides the Numeric/Offset part of the Argument
+     * @return {@link PlpNumericLiteralArgument} offset/numeric part of memory argument
+     */
+    public PlpNumericLiteralArgument getOffsetArgumentOfMemoryArg() {
+        return offset;
     }
 
     @Override

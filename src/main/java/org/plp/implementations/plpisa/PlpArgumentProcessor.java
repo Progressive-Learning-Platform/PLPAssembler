@@ -15,6 +15,17 @@ import org.plp.isa.AsmToken;
  * Converts the given {@link PlpToken} to one of the {@link AsmArgument}
  */
 public class PlpArgumentProcessor implements AsmArgumentProcessor {
+
+    private final PlpSymbolTable symbolTable;
+
+    /**
+     * Creates an argument processor
+     * @param symbolTable used for accessing address of labels
+     */
+    public PlpArgumentProcessor(PlpSymbolTable symbolTable) {
+        this.symbolTable = symbolTable;
+    }
+
     /**
      * Create the argument based on the token passed
      *
@@ -27,7 +38,7 @@ public class PlpArgumentProcessor implements AsmArgumentProcessor {
         if(token.getTokenType() == PlpArgumentType.CHAR.tokenType()) {
             return new PlpCharLiteralArgument(token.getValue());
         } else if(token.getTokenType() == PlpArgumentType.LABEL.tokenType()) {
-            return new PlpLabelArgument(token.getValue());
+            return new PlpLabelArgument(token.getValue(), symbolTable);
         } else if(token.getTokenType() == PlpArgumentType.NUMERIC.tokenType()) {
             return new PlpNumericLiteralArgument(token.getValue());
         } else if(token.getTokenType() == PlpArgumentType.STRING.tokenType()) {
