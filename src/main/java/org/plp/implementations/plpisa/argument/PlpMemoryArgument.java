@@ -29,7 +29,7 @@ public class PlpMemoryArgument implements AsmArgument {
 
         String[] parts = argument.split("\\(");
         offset = new PlpNumericLiteralArgument(parts[0]);
-        register = new PlpRegisterArgument(parts[1].substring(0, parts[1].length()));
+        register = new PlpRegisterArgument(parts[1].substring(0, parts[1].indexOf(')')));
 
         return offset.encode();
     }
