@@ -31,10 +31,12 @@ public interface AsmImage {
      * This will store the list of disassembly to in-memory store which are generated
      * from the instructions.
      *
-     * @param asmInstructionDisassemblyList list of disassembly of instructions.
+     * @param asmInstruction {@link AsmInstruction} whose disassembly we are adding.
+     * @param asmInstructionDisassembly {@link AsmInstructionDisassembly} which is disassembly of the instruction
+     *
      */
-    void addDisassemblyOfInstructions(
-            List<AsmInstructionDisassembly> asmInstructionDisassemblyList);
+    void addDisassemblyOfInstruction(AsmInstruction asmInstruction,
+                                      AsmInstructionDisassembly asmInstructionDisassembly);
 
     /**
      * This provides the {@link AsmProgram} whose asm image this is

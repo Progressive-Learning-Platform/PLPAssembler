@@ -23,6 +23,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.12.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.12.2'
 
+    implementation 'com.google.guava:guava:31.0.1-jre'
+
     testCompileOnly 'org.projectlombok:lombok:1.18.16'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 
