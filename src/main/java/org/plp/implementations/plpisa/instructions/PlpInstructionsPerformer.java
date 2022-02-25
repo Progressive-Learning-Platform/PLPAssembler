@@ -2,6 +2,7 @@ package org.plp.implementations.plpisa.instructions;
 
 import org.plp.implementations.plpisa.PlpCurrentAddressManager;
 import org.plp.isa.AsmArgument;
+import org.plp.isa.AsmInstructionAssembler;
 import org.plp.isa.exceptions.AsmAssemblerException;
 
 import java.util.HashMap;
@@ -16,13 +17,38 @@ import java.util.function.Function;
 public class PlpInstructionsPerformer {
     private final PlpCurrentAddressManager currentAddressManager;
     private final Map<String, Function<List<AsmArgument>, Long>> instructionsMap;
+    private final PlpInstructionOpcodesTypes plpInstructionOpcodesTypes;
+
+    private Function<List<AsmArgument>, Long> createInstructionProcessors(String instructionName,
+                                                                          int opCode,
+                                                                          PlpInstructionType typeOfInstruction) {
+        AsmInstructionAssembler instructionProcessor;
+        switch (typeOfInstruction) {
+            case RI_TYPE_INSTRUCTION:
+                instructionProcessor = new RITypeInstructionsProcessor(instructionName, opCode, currentAddressManager);
+                break;
+            case R_TYPE_INSTRUCTION:
+                instructionProcessor = new RTypeInstructionsProcessor(instructionName, opCode, currentAddressManager);
+                break;
+            case B_TYPE_INSTRUCTION:
+                instructionProcessor = new BTypeInstructionsProcessor(instructionName, opCode, currentAddressManager);
+                break;
+            default:
+                instructionProcessor = new ITypeInstructionsProcessor(instructionName, opCode, currentAddressManager);
+                break;
+        }
+
+        return instructionProcessor::assemble;
+    }
 
     /**
      * This will create an object which will handle all instructions encoding
      * @param currentAddressManager {@link PlpCurrentAddressManager} handles queries regarding address of program
      */
-    public PlpInstructionsPerformer(PlpCurrentAddressManager currentAddressManager) {
+    public PlpInstructionsPerformer(PlpCurrentAddressManager currentAddressManager,
+                                    PlpInstructionOpcodesTypes plpInstructionOpcodesTypes) {
         this.currentAddressManager = currentAddressManager;
+        this.plpInstructionOpcodesTypes = plpInstructionOpcodesTypes;
         instructionsMap = new HashMap<>();
 
         populateInstructionsMap();
@@ -30,6 +56,12 @@ public class PlpInstructionsPerformer {
 
     private void populateInstructionsMap() {
 
+        for(String instruction : this.plpInstructionOpcodesTypes.getAvailableInstructions()) {
+            Integer opCode = plpInstructionOpcodesTypes.opCodeFromInstruction(instruction);
+            PlpInstructionType instructionType = plpInstructionOpcodesTypes.getInstructionType(instruction);
+            instructionsMap.put(instruction,
+                    createInstructionProcessors(instruction, opCode, instructionType));
+        }
     }
 
     /**

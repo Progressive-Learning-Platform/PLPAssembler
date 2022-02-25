@@ -53,4 +53,16 @@ public interface AsmInstructionAssembler {
      */
     int getMemoryAllocationSize();
 
+    /**
+     * This will provide the instruction name which is processed by this object
+     * @return instruction name
+     */
+    String getInstructionName();
+
+    /**
+     * This will return the function code of this instruction
+     * @return opcode or function code used for encoding
+     */
+    int getFunctionCodeOfInstruction();
+
 }
